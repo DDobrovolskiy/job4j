@@ -11,7 +11,7 @@ jdk:
 
 env:
   global:
-    - CODECOV_TOKEN="f3e3945b-c7a2-4b4a-9fbf-0bb70b3db0f4"
+    - CODECOV_TOKEN="4f4df8f0-da2e-4fcd-ab33-a2f29c6b1f8c"
 
 # используем режим обычного пользователя для сборки проекта.
 sudo: false
