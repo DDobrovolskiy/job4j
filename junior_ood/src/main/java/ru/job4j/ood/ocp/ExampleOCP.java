@@ -6,7 +6,7 @@ import java.util.Scanner;
 public class ExampleOCP {
     //Объявлена конкретная структура, не всегда правильно, лучше воспользоваться интерфейсом
     public static class Example1 {
-        ArrayList<Integer> arrayList;
+        private ArrayList<Integer> arrayList;
 
         public Example1(ArrayList<Integer> arrayList) {
             this.arrayList = arrayList;
