@@ -6,14 +6,10 @@
         <artifactId>job4j</artifactId>
         <groupId>org.example</groupId>
         <version>1.0-job4j-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>junior_ood</artifactId>
-
-    <properties>
-        <maven.compiler.source>15</maven.compiler.source>
-        <maven.compiler.target>15</maven.compiler.target>
-    </properties>
 
 </project>
