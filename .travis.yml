@@ -3,15 +3,15 @@ language: java
 jdk:
   - openjdk15
 
-services:
-  - postgresql
+#services:
+#  - postgresql
 
-before_install:
-  - psql -c 'CREATE DATABASE rabbit' -U postgres
+#before_install:
+#  - psql -c 'CREATE DATABASE rabbit' -U postgres
 
 env:
   global:
-    - CODECOV_TOKEN="8fa6984b-7d86-4cd3-baf7-24ecb526c236"
+    - CODECOV_TOKEN="f3e3945b-c7a2-4b4a-9fbf-0bb70b3db0f4"
 
 # используем режим обычного пользователя для сборки проекта.
 sudo: false
