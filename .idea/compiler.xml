@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="junior_gc" />
         <module name="junior_ood" />
+        <module name="junior_db" />
       </profile>
     </annotationProcessing>
   </component>
