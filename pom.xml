@@ -10,6 +10,7 @@
     <version>1.0-job4j-SNAPSHOT</version>
     <modules>
         <module>junior_ood</module>
+        <module>junior_gc</module>
     </modules>
 
     <properties>
