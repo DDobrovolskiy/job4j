@@ -3,10 +3,15 @@ package ru.job4j.ood.srp;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.is;
 
-import org.junit.Assert;
+import com.google.gson.GsonBuilder;
 import org.junit.Test;
+import ru.job4j.ood.ocp.ReportInXML;
+import ru.job4j.ood.ocp.ReportJSON;
+
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import java.util.Calendar;
-import java.util.Comparator;
 
 public class ReportEngineTest {
 
@@ -93,5 +98,32 @@ public class ReportEngineTest {
         System.out.println(expect);
         System.out.println(engine.generate(em -> true));
         assertThat(engine.generate(em -> true), is(expect.toString()));
+    }
+
+    @Test
+    public void whenReportXML() throws JAXBException {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker = new Employee("Ivan", now, now, 100);
+        Employee worker1 = new Employee("Dima", now, now, 150);
+        store.add(worker);
+        store.add(worker1);
+        JAXBContext context = JAXBContext.newInstance(Employee.class);
+        Marshaller marshaller = context.createMarshaller();
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        Report engine = new ReportInXML(store, marshaller);
+        System.out.println(engine.generate(em -> true));
+    }
+
+    @Test
+    public void whenReportJSON() {
+        MemStore store = new MemStore();
+        Calendar now = Calendar.getInstance();
+        Employee worker = new Employee("Ivan", now, now, 100);
+        Employee worker1 = new Employee("Dima", now, now, 150);
+        store.add(worker);
+        store.add(worker1);
+        Report engine = new ReportJSON(store, new GsonBuilder().create());
+        System.out.println(engine.generate(em -> true));
     }
 }
