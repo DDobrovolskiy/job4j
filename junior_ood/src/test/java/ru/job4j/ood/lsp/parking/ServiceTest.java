@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
+import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.*;
 
 public class ServiceTest {
@@ -17,7 +18,10 @@ public class ServiceTest {
         ParkingSpace parking = new Parking(10);
         service.addParkingSpace(parking);
         int actualCountParkingSpace = 1;
-        //Assert.assertEquals(service.getParkingSpaces().size(), actualCountParkingSpace);
+        Assert.assertThat(
+                "Количество парковок",
+                actualCountParkingSpace,
+                is(service.getParkingSpaces().size()));
         Auto car = new Auto() {
             @Override
             public String getTypeAuto() {
@@ -50,14 +54,16 @@ public class ServiceTest {
         auto = service.placeAutoInParking(auto); //В очереди остается 1 машина
         //all parking space 3
         int actualCountAutoInList = 1;
-        //Assert.assertEquals(auto.size(), actualCountAutoInList);
+        Assert.assertThat("Оставшихся авто 1", actualCountAutoInList, is(auto.size()));
         int actualCountAutoInParking = 4;
-        //Assert.assertEquals(
-        //        service.getParkingSpaces().get(0).getAutoOnParking().size(),
-        //        actualCountAutoInParking); //Всего на парковке 4 машины
+        Assert.assertThat(
+                "Машин на парковке 4",
+                actualCountAutoInParking,
+                is(service.getParkingSpaces().get(0).getAutoOnParking().size()));
+        //Всего на парковке 4 машины
         service.addParkingSpace(new Parking(10)); //Добавляем еще один паркинг
         auto = service.placeAutoInParking(auto); //Все машины распределены
         actualCountAutoInList = 0;
-        //Assert.assertEquals(auto.size(), actualCountAutoInList);
+        Assert.assertThat("Оставшихся авто 0", actualCountAutoInList, is(auto.size()));
     }
 }

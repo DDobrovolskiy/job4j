@@ -3,11 +3,11 @@ package ru.job4j.ood.lsp.parking;
 public class Car implements Auto {
     @Override
     public String getTypeAuto() {
-        return null;
+        return "car";
     }
 
     @Override
     public int getSizeParkingSpace() {
-        return 0;
+        return 1;
     }
 }
