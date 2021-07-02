@@ -6,7 +6,8 @@ public interface ParkingSpace {
     /**Возращает количество свободных парковочных мест*/
     int getFreeParkingSpace();
 
-    /**Занимает парковочное место*/
+    /**Занимает парковочное место
+     * @return возращает флаг припарковано авто или нет*/
     boolean takeParkingSpace(Auto auto);
 
     /**Возращает список авто на парковке*/
