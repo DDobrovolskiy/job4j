@@ -4,6 +4,11 @@
 [![Build Status](https://www.travis-ci.com/stGOST/job4j.svg?branch=master)](https://www.travis-ci.com/stGOST/job4j)
 
 [![codecov](https://codecov.io/gh/stGOST/job4j/branch/master/graph/badge.svg?token=J00S19M9SK)](https://codecov.io/gh/stGOST/job4j)
+# Модуль junior_io
+- введение в IO
+- введение в Socket
+- логирование (Log4j, Slf4j)
+- сериализация (XML, JSON, POJO)
 # Модуль junior_db
 - введение в SQL
 - PostgreSQL

@@ -12,6 +12,7 @@
         <module>junior_ood</module>
         <module>junior_gc</module>
         <module>junior_db</module>
+        <module>junior_io</module>
     </modules>
 
     <properties>

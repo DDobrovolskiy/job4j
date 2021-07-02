@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<animalHouse name="Home">
+    <open>true</open>
+    <capacity>2</capacity>
+    <animals>
+        <animal name="Jerry"/>
+        <animal name="Tom"/>
+    </animals>
+</animalHouse>
