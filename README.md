@@ -4,6 +4,10 @@
 [![Build Status](https://www.travis-ci.com/stGOST/job4j.svg?branch=master)](https://www.travis-ci.com/stGOST/job4j)
 
 [![codecov](https://codecov.io/gh/stGOST/job4j/branch/master/graph/badge.svg?token=J00S19M9SK)](https://codecov.io/gh/stGOST/job4j)
+# Модуль junior_collection
+- использование Iterator
+- введение в Generic
+- коллекции (List, Set, Map, Tree)
 # Модуль junior_io
 - введение в IO
 - введение в Socket

@@ -13,6 +13,7 @@
         <module>junior_gc</module>
         <module>junior_db</module>
         <module>junior_io</module>
+        <module>junior_collection</module>
     </modules>
 
     <properties>
