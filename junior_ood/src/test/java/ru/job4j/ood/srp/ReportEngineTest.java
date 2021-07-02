@@ -108,10 +108,7 @@ public class ReportEngineTest {
         Employee worker1 = new Employee("Dima", now, now, 150);
         store.add(worker);
         store.add(worker1);
-        JAXBContext context = JAXBContext.newInstance(Employee.class);
-        Marshaller marshaller = context.createMarshaller();
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
-        Report engine = new ReportInXML(store, marshaller);
+        Report engine = new ReportInXML(store);
         System.out.println(engine.generate(em -> true));
     }
 
@@ -123,7 +120,7 @@ public class ReportEngineTest {
         Employee worker1 = new Employee("Dima", now, now, 150);
         store.add(worker);
         store.add(worker1);
-        Report engine = new ReportJSON(store, new GsonBuilder().create());
+        Report engine = new ReportJSON(store);
         System.out.println(engine.generate(em -> true));
     }
 }
