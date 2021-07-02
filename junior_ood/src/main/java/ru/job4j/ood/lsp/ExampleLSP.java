@@ -42,29 +42,23 @@ public class ExampleLSP {
         }
     }
 
-    //Отсутствие наследования, разные состояния объектов
+    //Ослабление условия в потомке
     public static class Example3 {
         private static class Class1 {
-            public void print() {
-                System.out.println("foo");
+            public void print(String message) {
+                if (message == null) {
+                    throw new IllegalArgumentException();
+                }
+                System.out.println(message);
             }
         }
 
-        private static class Class2 {
+        private static class Class2 extends Class1 {
+            @Override
             public void print(String message) {
                 System.out.println(message);
             }
         }
 
-        private static class Foo {
-            public void foo(Object object) {
-                if (object.getClass() == Class1.class) {
-                    ((Class1) object).print();
-                }
-                if (object.getClass() == Class2.class) {
-                    ((Class2) object).print("foo");
-                }
-            }
-        }
     }
 }
