@@ -4,36 +4,44 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.*;
 
 public class ParkingTest {
 
     @Test (expected = IllegalArgumentException.class)
-    public void whenCreateParkingSpaceWithNegativeNumber() {
-        ParkingSpace parking = new Parking(-1);
+    public void whenCreateParkingSpaceWithNegativeNumberCar() {
+        ParkingSpace parking = new Parking(-1, 10);
     }
 
     @Test (expected = IllegalArgumentException.class)
-    public void whenCreateParkingSpaceWithZero() {
-        ParkingSpace parking = new Parking(0);
+    public void whenCreateParkingSpaceWithZeroCar() {
+        ParkingSpace parking = new Parking(0, 10);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void whenCreateParkingSpaceWithNegativeNumberTruck() {
+        ParkingSpace parking = new Parking(10, -1);
+    }
+
+    @Test (expected = IllegalArgumentException.class)
+    public void whenCreateParkingSpaceWithZeroTruck() {
+        ParkingSpace parking = new Parking(10, 0);
     }
 
     @Test
     public void whenCreateParkingNormal() {
-        ParkingSpace parking = new Parking(10);
-        int actualFreeParkingSpace = 10;
-        Assert.assertThat(actualFreeParkingSpace, is(parking.getFreeParkingSpace()));
+        ParkingSpace parking = new Parking(10, 10);
+        int actualFreeParkingSpaceForCar = 10;
+        Assert.assertThat(actualFreeParkingSpaceForCar, is(parking.getFreeParkingSpaceForCar()));
+        int actualFreeParkingSpaceForTruck = 10;
+        Assert.assertThat(
+                actualFreeParkingSpaceForTruck,
+                is(parking.getFreeParkingSpaceForTruck()));
     }
 
     @Test (expected = IllegalArgumentException.class)
     public void whenWrongParkingSpaceAuto() {
-        ParkingSpace parking = new Parking(10);
+        ParkingSpace parking = new Parking(10, 10);
         Auto auto = new Auto() {
-            @Override
-            public String getTypeAuto() {
-                return "test";
-            }
-
             @Override
             public int getSizeParkingSpace() {
                 return -1;
@@ -44,34 +52,35 @@ public class ParkingTest {
 
     @Test
     public void whenTakeParkingSpaceAutoNotFull() {
-        ParkingSpace parking = new Parking(10);
-        Auto auto = new Auto() {
+        ParkingSpace parking = new Parking(10, 10);
+        Auto car = new Auto() {
             @Override
-            public String getTypeAuto() {
-                return "test";
+            public int getSizeParkingSpace() {
+                return 1;
             }
-
+        };
+        Auto truck = new Auto() {
             @Override
             public int getSizeParkingSpace() {
                 return 5;
             }
         };
-        Assert.assertTrue(parking.takeParkingSpace(auto));
-        int actualFreeParkingSpace = 5;
-        Assert.assertThat(actualFreeParkingSpace, is(parking.getFreeParkingSpace()));
-        int countAutoInParking = 1;
+        Assert.assertTrue(parking.takeParkingSpace(car));
+        int actualFreeParkingSpaceCar = 9;
+        Assert.assertThat(actualFreeParkingSpaceCar, is(parking.getFreeParkingSpaceForCar()));
+
+        Assert.assertTrue(parking.takeParkingSpace(truck));
+        int actualFreeParkingSpaceTruck = 9;
+        Assert.assertThat(actualFreeParkingSpaceTruck, is(parking.getFreeParkingSpaceForTruck()));
+
+        int countAutoInParking = 2;
         Assert.assertThat(countAutoInParking, is(parking.getAutoOnParking().size()));
     }
 
     @Test
     public void whenTakeParkingSpaceAutoFull() {
-        ParkingSpace parking = new Parking(10);
+        ParkingSpace parking = new Parking(4, 2);
         Auto auto = new Auto() {
-            @Override
-            public String getTypeAuto() {
-                return "test";
-            }
-
             @Override
             public int getSizeParkingSpace() {
                 return 5;
@@ -81,7 +90,10 @@ public class ParkingTest {
         Assert.assertTrue("2 машина", parking.takeParkingSpace(auto));
         Assert.assertFalse("3 машина", parking.takeParkingSpace(auto));
         int actualFreeParkingSpace = 0;
-        Assert.assertThat("Просранство", actualFreeParkingSpace, is(parking.getFreeParkingSpace()));
+        Assert.assertThat(
+                "Просранство",
+                actualFreeParkingSpace,
+                is(parking.getFreeParkingSpaceForTruck()));
         int countAutoInParking = 2;
         Assert.assertThat(
                 "3 машина попытка 2",
