@@ -22,18 +22,8 @@ public class ServiceTest {
                 "Количество парковок",
                 actualCountParkingSpace,
                 is(service.getParkingSpaces().size()));
-        Auto car = new Auto() {
-            @Override
-            public int getSizeParkingSpace() {
-                return 1;
-            }
-        };
-        Auto truck = new Auto() {
-            @Override
-            public int getSizeParkingSpace() {
-                return 3;
-            }
-        };
+        Auto car = new Car();
+        Auto truck = new Truck(3);
         List<Auto> auto = new LinkedList<>();
         auto.add(truck);
         auto.add(truck);

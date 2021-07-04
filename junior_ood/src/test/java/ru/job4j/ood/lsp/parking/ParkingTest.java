@@ -41,30 +41,15 @@ public class ParkingTest {
     @Test (expected = IllegalArgumentException.class)
     public void whenWrongParkingSpaceAuto() {
         ParkingSpace parking = new Parking(10, 10);
-        Auto auto = new Auto() {
-            @Override
-            public int getSizeParkingSpace() {
-                return -1;
-            }
-        };
+        Auto auto = new Truck(-1);
         parking.takeParkingSpace(auto);
     }
 
     @Test
     public void whenTakeParkingSpaceAutoNotFull() {
         ParkingSpace parking = new Parking(10, 10);
-        Auto car = new Auto() {
-            @Override
-            public int getSizeParkingSpace() {
-                return 1;
-            }
-        };
-        Auto truck = new Auto() {
-            @Override
-            public int getSizeParkingSpace() {
-                return 5;
-            }
-        };
+        Auto car = new Car();
+        Auto truck = new Truck(5);
         Assert.assertTrue(parking.takeParkingSpace(car));
         int actualFreeParkingSpaceCar = 9;
         Assert.assertThat(actualFreeParkingSpaceCar, is(parking.getFreeParkingSpaceForCar()));
@@ -80,15 +65,10 @@ public class ParkingTest {
     @Test
     public void whenTakeParkingSpaceAutoFull() {
         ParkingSpace parking = new Parking(4, 2);
-        Auto auto = new Auto() {
-            @Override
-            public int getSizeParkingSpace() {
-                return 5;
-            }
-        };
-        Assert.assertTrue("1 машина", parking.takeParkingSpace(auto));
-        Assert.assertTrue("2 машина", parking.takeParkingSpace(auto));
-        Assert.assertFalse("3 машина", parking.takeParkingSpace(auto));
+        Auto truck = new Truck(5);
+        Assert.assertTrue("1 машина", parking.takeParkingSpace(truck));
+        Assert.assertTrue("2 машина", parking.takeParkingSpace(truck));
+        Assert.assertFalse("3 машина", parking.takeParkingSpace(truck));
         int actualFreeParkingSpace = 0;
         Assert.assertThat(
                 "Просранство",
