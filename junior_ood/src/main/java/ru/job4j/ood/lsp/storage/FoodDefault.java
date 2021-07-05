@@ -1,16 +1,16 @@
 package ru.job4j.ood.lsp.storage;
 
-import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public class FoodDefault implements Food {
     private final String name;
-    private final LocalDate expiryDate;
-    private final LocalDate createDate;
+    private final ChronoLocalDate expiryDate;
+    private final ChronoLocalDate createDate;
     private float price;
     private float discount;
 
-    public FoodDefault(String name, LocalDate expiryDate,
-                       LocalDate createDate, float price, float discount) {
+    public FoodDefault(String name, ChronoLocalDate expiryDate,
+                       ChronoLocalDate createDate, float price, float discount) {
         this.name = name;
         this.expiryDate = expiryDate;
         this.createDate = createDate;
@@ -22,11 +22,11 @@ public class FoodDefault implements Food {
         return name;
     }
 
-    public LocalDate getExpiryDate() {
+    public ChronoLocalDate getExpiryDate() {
         return expiryDate;
     }
 
-    public LocalDate getCreateDate() {
+    public ChronoLocalDate getCreateDate() {
         return createDate;
     }
 

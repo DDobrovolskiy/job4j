@@ -1,17 +1,10 @@
 package ru.job4j.ood.lsp.storage;
 
-import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public abstract class OperationStoreBase implements OperationStore {
 
-    private LocalDate toDay = LocalDate.now();
-
-    public OperationStore setToDay(LocalDate toDay) {
-        this.toDay = toDay;
-        return this;
-    }
-
-    private long getDeltaDays(LocalDate date1, LocalDate date2) {
+    private long getDeltaDays(ChronoLocalDate date1, ChronoLocalDate date2) {
         long delta = date2.toEpochDay() - date1.toEpochDay();
         if (delta < 0) {
             throw new IllegalArgumentException("Перепутаны время срока годности и создания");
@@ -26,7 +19,7 @@ public abstract class OperationStoreBase implements OperationStore {
         return (float) deltaDaysNow / deltaDaysFood * 100;
     }
 
-    public float getPercentFreshFood(Food food) {
+    public float getPercentFreshFood(Food food, ChronoLocalDate toDay) {
         return getPercent(
                 getDeltaDays(food.getCreateDate(), food.getExpiryDate()),
                 getDeltaDays(food.getCreateDate(), toDay));

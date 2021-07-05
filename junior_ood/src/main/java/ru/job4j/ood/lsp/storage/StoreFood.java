@@ -7,4 +7,6 @@ public interface StoreFood {
     boolean add(Food food);
 
     List<Food> getFoods();
+
+    void clear();
 }

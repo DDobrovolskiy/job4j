@@ -16,4 +16,9 @@ public abstract class Store implements StoreFood {
     public boolean add(Food food) {
         return foodDefaults.add(food);
     }
+
+    @Override
+    public void clear() {
+        foodDefaults.clear();
+    }
 }

@@ -1,13 +1,13 @@
 package ru.job4j.ood.lsp.storage;
 
-import java.time.LocalDate;
+import java.time.chrono.ChronoLocalDate;
 
 public interface Food {
     String getName();
 
-    LocalDate getExpiryDate();
+    ChronoLocalDate getExpiryDate();
 
-    LocalDate getCreateDate();
+    ChronoLocalDate getCreateDate();
 
     float getPrice();
 
