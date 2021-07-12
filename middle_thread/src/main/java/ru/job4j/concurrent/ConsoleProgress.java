@@ -15,7 +15,7 @@ public class ConsoleProgress implements Runnable {
                     i = 0;
                 }
             } catch (InterruptedException e) {
-                //Thread.currentThread().interrupt();
+                Thread.currentThread().interrupt();
             }
         }
     }
