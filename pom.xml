@@ -14,6 +14,7 @@
         <module>junior_db</module>
         <module>junior_io</module>
         <module>junior_collection</module>
+        <module>middle_thread</module>
     </modules>
 
     <properties>
