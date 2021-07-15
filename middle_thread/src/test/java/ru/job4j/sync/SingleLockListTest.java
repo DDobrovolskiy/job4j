@@ -23,6 +23,8 @@ public class SingleLockListTest {
         first.join();
         second.join();
 
+        base.add(3);
+
         Set<Integer> rsl = new TreeSet<>();
 
         list.iterator().forEachRemaining(rsl::add);
