@@ -20,7 +20,7 @@ public class SimpleBlockingQueueTest {
     @Before
     public void begin() {
         listDesc = new LinkedList<>();
-        queue = new SimpleBlockingQueue<>();
+        queue = new SimpleBlockingQueue<>(3);
         listSource = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
     }
 
@@ -32,7 +32,13 @@ public class SimpleBlockingQueueTest {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            listSource.forEach(queue::offer);
+            for (int i : listSource) {
+                try {
+                    queue.offer(i);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
             System.out.println("Загрузка заверщена");
         });
         Thread consumer = new Thread(() -> {
