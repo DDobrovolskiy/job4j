@@ -36,19 +36,20 @@ public class SimpleBlockingQueueTest {
                 try {
                     queue.offer(i);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
             System.out.println("Загрузка заверщена");
         });
         Thread consumer = new Thread(() -> {
-            for (int i = 0; i < listSource.size(); i++) {
+            int i = 0;
+            while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
                 try {
                     listDesc.add(queue.poll());
-                    System.out.println("Текущий i: " + i);
+                    System.out.println("Текущий i: " + i++);
                     Thread.sleep(10);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.currentThread().interrupt();
                 }
             }
         });
@@ -57,6 +58,7 @@ public class SimpleBlockingQueueTest {
         consumer.start();
 
         producer.join();
+        consumer.interrupt();
         consumer.join();
 
         Assert.assertThat(listSource, is(listDesc));
