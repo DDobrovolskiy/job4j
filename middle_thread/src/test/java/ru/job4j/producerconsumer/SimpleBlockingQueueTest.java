@@ -13,19 +13,12 @@ import static org.junit.Assert.*;
 
 public class SimpleBlockingQueueTest {
 
-    private SimpleBlockingQueue<Integer> queue;
-    private List<Integer> listSource;
-    private List<Integer> listDesc;
-
-    @Before
-    public void begin() {
-        listDesc = new LinkedList<>();
-        queue = new SimpleBlockingQueue<>(3);
-        listSource = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
-    }
-
     @Test
     public void whenNormalWork() throws InterruptedException {
+        List<Integer> listDesc = new LinkedList<>();
+        SimpleBlockingQueue<Integer> queue = new SimpleBlockingQueue<>(3);
+        List<Integer> listSource = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9);
+
         Thread producer = new Thread(() -> {
             try {
                 Thread.sleep(80);
@@ -36,22 +29,26 @@ public class SimpleBlockingQueueTest {
                 try {
                     queue.offer(i);
                 } catch (InterruptedException e) {
+                    e.printStackTrace();
                     Thread.currentThread().interrupt();
                 }
             }
             System.out.println("Загрузка заверщена");
         });
+
         Thread consumer = new Thread(() -> {
             int i = 0;
             while (!queue.isEmpty() || !Thread.currentThread().isInterrupted()) {
                 try {
-                    listDesc.add(queue.poll());
                     System.out.println("Текущий i: " + i++);
-                    Thread.sleep(10);
+                    listDesc.add(queue.poll());
+                    Thread.sleep(30);
                 } catch (InterruptedException e) {
+                    //e.printStackTrace();
                     Thread.currentThread().interrupt();
                 }
             }
+            System.out.println("Consumer END");
         });
 
         producer.start();
