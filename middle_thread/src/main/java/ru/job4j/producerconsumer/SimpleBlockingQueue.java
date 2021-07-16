@@ -13,6 +13,10 @@ public class SimpleBlockingQueue<T> {
     private final Queue<T> queue = new LinkedList<>();
     private final int capacity;
 
+    public SimpleBlockingQueue() {
+        this.capacity = Integer.MAX_VALUE;
+    }
+
     public SimpleBlockingQueue(int capacity) {
         this.capacity = capacity;
     }
