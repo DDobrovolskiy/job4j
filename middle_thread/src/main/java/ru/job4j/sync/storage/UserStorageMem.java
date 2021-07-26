@@ -9,13 +9,23 @@ import java.util.function.Predicate;
 
 @ThreadSafe
 public class UserStorageMem implements UserStore {
-    @GuardedBy("this")
+    private final Object lock = new Object();
+    @GuardedBy("lock")
     private final Map<Integer, User> users = new HashMap<>();
-    @GuardedBy("this")
+    @GuardedBy("lock")
     private int count = 1;
 
+    private UserStorageMem() {
+    }
+
+    //Что бы не ускользвл this используем фабрику
+    public static UserStore factory() {
+        return new UserStorageMem();
+    }
+
+    //Болокировка происходит в методе baseCRUD, объект блокировки "lock"
     @Override
-    public synchronized boolean add(User user) {
+    public boolean add(User user) {
         Predicate<Integer> predicate = integer -> !users.containsKey(integer);
         Function<User, Boolean> function = userFunc -> {
             userFunc.setId(count++);
@@ -26,7 +36,7 @@ public class UserStorageMem implements UserStore {
     }
 
     @Override
-    public synchronized boolean update(User user) {
+    public boolean update(User user) {
         Predicate<Integer> predicate = users::containsKey;
         Function<User, Boolean> function = userFunc -> {
             users.put(userFunc.getId(), userFunc);
@@ -36,7 +46,7 @@ public class UserStorageMem implements UserStore {
     }
 
     @Override
-    public synchronized boolean delete(User user) {
+    public boolean delete(User user) {
         Predicate<Integer> predicate = users::containsKey;
         Function<User, Boolean> function = userFunc -> {
             users.remove(userFunc.getId());
@@ -46,22 +56,71 @@ public class UserStorageMem implements UserStore {
     }
 
     @Override
-    public synchronized User find(int id) {
-        User user = users.get(id);
+    public User find(int id) {
+        User user;
+        synchronized (lock) {
+            user = users.get(id);
+        }
         if (user != null) {
             return user.clone();
         }
         return null;
     }
 
+    //Болокировка происходит в методе doTrans, объект блокировки "lock"
+    @Override
+    public boolean transfer(int fromId, int toId, int amount) {
+        User userFrom = find(fromId);
+        User userTo = find(toId);
+        return doTrans(userFrom, userTo, amount);
+    }
+
+    private boolean doTrans(User userFrom, User userTo, int amount) {
+        synchronized (lock) {
+            boolean result = false;
+            if (isNotNull(userFrom) && isNotNull(userTo)) {
+                result = checkAmount(userFrom, userTo, amount);
+            }
+            return result;
+        }
+    }
+
+    private boolean isNotNull(User user) {
+        return user != null;
+    }
+
+    private boolean checkAmount(User userFrom, User userTo, int amount) {
+        boolean result = false;
+        if (userFrom.getAmount() >= amount) {
+            //do
+            amountTrans(userFrom, userTo, amount);
+            //validate
+            if (checkUpdate(userFrom, userTo)) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
+    private void amountTrans(User userFrom, User userTo, int amount) {
+        userFrom.setAmount(userFrom.getAmount() - amount);
+        userTo.setAmount(userTo.getAmount() + amount);
+    }
+
+    private synchronized boolean checkUpdate(User userFrom, User userTo) {
+        return update(userFrom) && update(userTo);
+    }
+
     private boolean baseCRUD(User user,
                              Predicate<Integer> predicate,
                              Function<User, Boolean> function) {
-        User userClone = getClone(user);
-        if (predicate.test(userClone.getId())) {
-            return function.apply(userClone);
+        synchronized (lock) {
+            User userClone = getClone(user);
+            if (predicate.test(userClone.getId())) {
+                return function.apply(userClone);
+            }
+            return false;
         }
-        return false;
     }
 
     private User getClone(User user) {

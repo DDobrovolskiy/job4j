@@ -8,4 +8,6 @@ public interface UserStore {
     boolean delete(User user);
 
     User find(int id);
+
+    boolean transfer(int fromId, int toId, int amount);
 }

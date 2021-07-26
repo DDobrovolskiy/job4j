@@ -5,26 +5,23 @@ import net.jcip.annotations.ThreadSafe;
 
 import java.util.Objects;
 
-@ThreadSafe
 public class User {
-    @GuardedBy("this")
     private int id;
-    @GuardedBy("this")
     private int amount;
 
-    public synchronized int getId() {
+    public int getId() {
         return id;
     }
 
-    public synchronized void setId(int id) {
+    public void setId(int id) {
         this.id = id;
     }
 
-    public synchronized int getAmount() {
+    public int getAmount() {
         return amount;
     }
 
-    public synchronized void setAmount(int amount) {
+    public void setAmount(int amount) {
         this.amount = amount;
     }
 
