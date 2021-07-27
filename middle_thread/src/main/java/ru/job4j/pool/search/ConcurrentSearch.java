@@ -19,8 +19,8 @@ public class ConcurrentSearch extends RecursiveTask<Integer> {
 
     @Override
     protected Integer compute() {
-        if (from == to) {
-            return array[from] == item ? from : -1;
+        if (this.from - this.to < 10) {
+            return searchInArray(array, item, 0, array.length - 1);
         }
         int mid = (from + to) / 2;
 
@@ -36,17 +36,16 @@ public class ConcurrentSearch extends RecursiveTask<Integer> {
     }
 
     public static int search(int[] array, int item) {
+        return new ForkJoinPool().invoke(
+                new ConcurrentSearch(array, item, 0, array.length - 1));
+    }
+
+    private static int searchInArray(int[] array, int item, int from, int to) {
         int result = -1;
-        if (array.length < 10) {
-            for (int i = 0; i < array.length; i++) {
-                if (array[i] == item) {
-                    result = i;
-                    break;
-                }
+        for (int i = 0; i < array.length; i++) {
+            if (array[i] == item) {
+                result = i;
             }
-        } else {
-            result = new ForkJoinPool().invoke(
-                    new ConcurrentSearch(array, item, 0, array.length - 1));
         }
         return result;
     }
