@@ -4,13 +4,13 @@ package ru.job4j.pool.search;
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.RecursiveTask;
 
-public class ConcurrentSearch extends RecursiveTask<Integer> {
-    private final int[] array;
-    private final int item;
+public class ConcurrentSearch<T> extends RecursiveTask<Integer> {
+    private final T[] array;
+    private final T item;
     private final int from;
     private final int to;
 
-    public ConcurrentSearch(int[] array, int item, int from, int to) {
+    public ConcurrentSearch(T[] array, T item, int from, int to) {
         this.array = array;
         this.item = item;
         this.from = from;
@@ -20,12 +20,12 @@ public class ConcurrentSearch extends RecursiveTask<Integer> {
     @Override
     protected Integer compute() {
         if (this.from - this.to < 10) {
-            return searchInArray(array, item, 0, array.length - 1);
+            return searchInArray();
         }
         int mid = (from + to) / 2;
 
-        var leftSearch = new ConcurrentSearch(array, item, from, mid);
-        var rightSearch = new ConcurrentSearch(array, item, mid + 1, to);
+        var leftSearch = new ConcurrentSearch<>(array, item, from, mid);
+        var rightSearch = new ConcurrentSearch<>(array, item, mid + 1, to);
 
         leftSearch.fork();
         rightSearch.fork();
@@ -35,16 +35,17 @@ public class ConcurrentSearch extends RecursiveTask<Integer> {
         return Math.max(left, right);
     }
 
-    public static int search(int[] array, int item) {
+    public static <T> int search(T[] array, T item) {
         return new ForkJoinPool().invoke(
-                new ConcurrentSearch(array, item, 0, array.length - 1));
+                new ConcurrentSearch<>(array, item, 0, array.length - 1));
     }
 
-    private static int searchInArray(int[] array, int item, int from, int to) {
+    private int searchInArray() {
         int result = -1;
         for (int i = 0; i < array.length; i++) {
-            if (array[i] == item) {
+            if (array[i].equals(item)) {
                 result = i;
+                break;
             }
         }
         return result;
