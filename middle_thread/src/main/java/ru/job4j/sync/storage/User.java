@@ -1,8 +1,5 @@
 package ru.job4j.sync.storage;
 
-import net.jcip.annotations.GuardedBy;
-import net.jcip.annotations.ThreadSafe;
-
 import java.util.Objects;
 
 public class User {

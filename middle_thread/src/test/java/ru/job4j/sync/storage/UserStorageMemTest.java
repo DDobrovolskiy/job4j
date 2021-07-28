@@ -16,7 +16,7 @@ public class UserStorageMemTest {
         User user3 = new User();
         User user4 = new User();
 
-        UserStore userStore = UserStorageMem.factory();
+        UserStore userStore = new UserStorageMem();
         Assert.assertTrue(userStore.add(user1)); //id = 1
         Assert.assertTrue(userStore.add(user2)); //id = 2
         Assert.assertTrue(userStore.add(user3)); //id = 3
