@@ -92,7 +92,7 @@ public class UserStorageMem implements UserStore {
     }
 
     private boolean checkUpdate(User userFrom, User userTo) {
-        return update(userFrom) & update(userTo);
+        return update(userFrom) && update(userTo);
     }
 
     private boolean baseCRUD(User user,
