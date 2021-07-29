@@ -10,11 +10,11 @@ public class UserStorageMemTest {
 
     @Test
     public void whenTransferWorkInMultiThread() throws InterruptedException {
-        User user1 = new User();
+        User user1 = new User(1);
         user1.setAmount(500);
-        User user2 = new User();
-        User user3 = new User();
-        User user4 = new User();
+        User user2 = new User(2);
+        User user3 = new User(3);
+        User user4 = new User(4);
 
         UserStore userStore = new UserStorageMem();
         Assert.assertTrue(userStore.add(user1)); //id = 1

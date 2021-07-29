@@ -1,17 +1,15 @@
 package ru.job4j.sync.storage;
 
-import java.util.Objects;
-
 public class User {
-    private int id;
+    private final int id;
     private int amount;
+
+    public User(int id) {
+        this.id = id;
+    }
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public int getAmount() {
@@ -22,33 +20,14 @@ public class User {
         this.amount = amount;
     }
 
-    @Override
-    public synchronized User clone() {
-        User user = new User();
-        user.id = this.id;
+    public User clone() {
+        User user = new User(this.id);
         user.amount = this.amount;
         return user;
     }
 
     @Override
-    public synchronized boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        User user = (User) o;
-        return id == user.id;
-    }
-
-    @Override
-    public synchronized int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public synchronized String toString() {
+    public String toString() {
         return "User{"
                 + "id=" + id
                 + ", amount=" + amount
