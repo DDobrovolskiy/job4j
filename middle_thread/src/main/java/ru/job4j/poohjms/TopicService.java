@@ -10,27 +10,22 @@ public class TopicService implements Service {
 
     @Override
     public Resp process(Req req) {
+        queue.putIfAbsent(req.theme(), new ConcurrentHashMap<>());
         if (req.method().equals("POST")) {
-            queue.putIfAbsent(req.theme(), new ConcurrentHashMap<>());
             var m = queue.get(req.theme());
             for (Map.Entry<Integer, ConcurrentLinkedQueue<String>> map: m.entrySet()) {
                 map.getValue().add(req.text());
             }
             return new Resp("OK", 201);
         } else {
-            var q = queue.get(req.theme());
-            if (q != null) {
-                q.putIfAbsent(req.id(), new ConcurrentLinkedQueue<>());
-                String answer = q.get(req.id()).poll();
-                if (answer == null) {
-                    return new Resp("Not found answer", 404);
-                } else {
-                    return new Resp(answer, 200);
-                }
+            var q = queue.getOrDefault(req.theme(), new ConcurrentHashMap<>());
+            q.putIfAbsent(req.id(), new ConcurrentLinkedQueue<>());
+            String answer = q.get(req.id()).poll();
+            if (answer == null) {
+                return new Resp("Not found answer", 404);
             } else {
-                return new Resp("Not found theme", 404);
+                return new Resp(answer, 200);
             }
-
         }
     }
 }

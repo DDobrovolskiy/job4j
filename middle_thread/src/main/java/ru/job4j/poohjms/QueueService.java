@@ -14,18 +14,12 @@ public class QueueService implements Service {
             queue.get(req.theme()).add(req.text());
             return new Resp("OK", 201);
         } else {
-            var q = queue.get(req.theme());
-            if (q != null) {
-                String answer = q.poll();
+            var answer = queue.getOrDefault(req.theme(), new ConcurrentLinkedQueue<>()).poll();
                 if (answer == null) {
                     return new Resp("Not found answer", 404);
                 } else {
                     return new Resp(answer, 200);
                 }
-            } else {
-                return new Resp("Not found theme", 404);
-            }
-
         }
     }
 }
