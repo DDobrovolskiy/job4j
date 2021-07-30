@@ -19,13 +19,7 @@ public class ReqTest {
                 + "Content-Type: application/x-www-form-urlencoded" +  System.lineSeparator()
                 + "" +  System.lineSeparator()
                 + "hello";
-        //System.out.println(message);
         var req = Req.of(message);
-        //System.out.println(req.method());
-        //System.out.println(req.mode());
-        //System.out.println(req.theme());
-        //System.out.println(req.id());
-        //System.out.println(req.text());
         Assert.assertEquals(req.method(), "POST");
         Assert.assertEquals(req.mode(), "queue");
         Assert.assertEquals(req.theme(), "weather");
