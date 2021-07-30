@@ -6,12 +6,13 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="junior_gc" />
         <module name="junior_ood" />
-        <module name="junior_collection" />
-        <module name="junior_db" />
         <module name="junior_io" />
         <module name="middle_thread" />
+        <module name="junior_gc" />
+        <module name="junior_collection" />
+        <module name="middle_servlet" />
+        <module name="junior_db" />
       </profile>
     </annotationProcessing>
   </component>

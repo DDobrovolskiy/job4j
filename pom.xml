@@ -15,6 +15,7 @@
         <module>junior_io</module>
         <module>junior_collection</module>
         <module>middle_thread</module>
+        <module>middle_servlet</module>
     </modules>
 
     <properties>
