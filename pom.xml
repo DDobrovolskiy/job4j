@@ -16,7 +16,6 @@
         <module>junior_collection</module>
         <module>middle_thread</module>
         <module>middle_servlet</module>
-        <module>job4j_dreamjob</module>
     </modules>
 
     <properties>
