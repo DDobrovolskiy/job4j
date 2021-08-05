@@ -33,7 +33,9 @@
                 <table class="table">
                     <thead>
                     <tr>
-                        <th scope="col">Названия</th>
+                        <th scope="col">Наименование</th>
+                        <th scope="col">Фото</th>
+                        <th scope="col">Дополнить</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -44,6 +46,17 @@
                                     <i class="fa fa-edit mr-3"></i>
                                 </a>
                                 <c:out value="${candidate.name}"/>
+                            </td>
+                            <td>
+                                <img src="<c:url value='/download?name=${candidate.id}'/>" width="100px" height="100px"/>
+                            </td>
+                            <td>
+                            <a href='<c:url value="/upload?id=${candidate.id}"/>'>
+                                <button type="submit" class="btn btn-primary">Загрузить новое фото</button>
+                            </a>
+                            <a href='<c:url value="/delete?id=${candidate.id}"/>'>
+                                <button type="submit" class="btn btn-primary">Удалить</button>
+                            </a>
                             </td>
                         </tr>
                     </c:forEach>
