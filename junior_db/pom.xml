@@ -49,7 +49,7 @@
                 <version>3.6.2</version>
                 <configuration>
                     <changeLogFile>${project.basedir}/src/db/master.xml</changeLogFile>
-                    <url>${db.url}</url>
+                    <url>${db.driver}</url>
                     <driver>${db.driver}</driver>
                     <username>${db.username}</username>
                     <password>${db.password}</password>
