@@ -21,6 +21,17 @@
     <title>Работа мечты</title>
 </head>
 <body>
+<div class="container">
+    <div class="row">
+        <ul class="nav">
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/index.do">В начало</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="<%=request.getContextPath()%>/login.jsp"> <c:out value="${user.name}"/> | Выйти</a>
+            </li>
+        </ul>
+    </div>
 <%
     String id = request.getParameter("id");
     Candidate candidate = new Candidate(0, "");
