@@ -2,7 +2,7 @@ package ru.job4j.dream.servlet;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.job4j.dream.store.MemStore;
+import ru.job4j.dream.store.PsqlStore;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -20,7 +20,7 @@ public class DeleteServlet extends HttpServlet {
         String id = req.getParameter("id");
         if (id != null) {
             LOG.debug("Удаление кандидата id: {}", id);
-            MemStore.instOf().deleteCandidate(Integer.parseInt(id));
+            PsqlStore.instOf().deleteCandidate(Integer.parseInt(id));
             for (File file : new File("C:\\images\\").listFiles()) {
                 if (file.getName().startsWith(id)) {
                     LOG.debug("Файл удален: {}", file.getName());
