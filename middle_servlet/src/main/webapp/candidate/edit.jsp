@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" %>
-<%@ page import="ru.job4j.dream.store.Store" %>
+<%@ page import="ru.job4j.dream.store.*" %>
 <%@ page import="ru.job4j.dream.model.Candidate" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jstl/core" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -36,7 +37,7 @@
     String id = request.getParameter("id");
     Candidate candidate = new Candidate(0, "");
     if (id != null) {
-        candidate = Store.instOf().findByIdCandidate(Integer.valueOf(id));
+        candidate = PsqlStore.instOf().findByIdCandidate(Integer.valueOf(id));
     }
 %>
 <div class="container pt-3">

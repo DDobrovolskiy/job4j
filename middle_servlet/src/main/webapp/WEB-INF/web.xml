@@ -32,7 +32,31 @@
     <servlet-name>AuthServlet</servlet-name>
     <servlet-class>ru.job4j.dream.servlet.AuthServlet</servlet-class>
   </servlet>
+  <filter>
+    <filter-name>AuthFilter</filter-name>
+    <filter-class>ru.job4j.dream.filter.AuthFilter</filter-class>
+  </filter>
+  <servlet>
+    <servlet-name>EditPost</servlet-name>
+    <servlet-class>ru.job4j.dream.servlet.EditPost</servlet-class>
+  </servlet>
+  <servlet>
+    <servlet-name>EditCandidate</servlet-name>
+    <servlet-class>ru.job4j.dream.servlet.EditCandidate</servlet-class>
+  </servlet>
 
+  <servlet-mapping>
+    <servlet-name>EditCandidate</servlet-name>
+    <url-pattern>/candidate.do</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>EditPost</servlet-name>
+    <url-pattern>/post.do</url-pattern>
+  </servlet-mapping>
+  <filter-mapping>
+    <filter-name>AuthFilter</filter-name>
+    <url-pattern>*.do</url-pattern>
+  </filter-mapping>
   <servlet-mapping>
     <servlet-name>AuthServlet</servlet-name>
     <url-pattern>/auth.do</url-pattern>
