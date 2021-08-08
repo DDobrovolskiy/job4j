@@ -9,7 +9,7 @@ services:
 before_install:
   - psql -c 'CREATE DATABASE rabbit' -U postgres
   - psql -c 'CREATE DATABASE dreamjob' -U postgres
-  - psql -c 'CREATE DATABASE tracker;' -U postgres
+  - psql -c 'CREATE DATABASE tracker' -U postgres
 
 env:
   global:
