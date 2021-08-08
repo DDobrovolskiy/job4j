@@ -24,19 +24,13 @@ public class RegServlet extends HttpServlet {
         String name = req.getParameter("name");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        if (!name.isEmpty() || !email.isEmpty() || !password.isEmpty()) {
-            User user = PsqlStore.instOf().findByEmail(email);
-            if (user == null) {
-                PsqlStore.instOf().save(new User(0, name, email, password));
-                resp.sendRedirect(req.getContextPath() + "/index.do");
-            } else {
-                req.setAttribute("error", "Такой юзер уже есть");
-                req.getRequestDispatcher("reg.jsp").forward(req, resp);
-            }
+        User user = PsqlStore.instOf().findByEmail(email);
+        if (user == null) {
+            PsqlStore.instOf().save(new User(0, name, email, password));
+            resp.sendRedirect(req.getContextPath() + "/index.do");
         } else {
-            req.setAttribute("error", "Не верные данные");
+            req.setAttribute("error", "Такой юзер уже есть");
             req.getRequestDispatcher("reg.jsp").forward(req, resp);
         }
-
     }
 }
