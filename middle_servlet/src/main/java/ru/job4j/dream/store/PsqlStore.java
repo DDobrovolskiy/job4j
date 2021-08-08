@@ -24,7 +24,7 @@ public class PsqlStore implements Store {
         try {
             Class.forName(cfg.getProperty("jdbc.driver"));
         } catch (Exception e) {
-            throw new IllegalStateException(e);
+            LOG.error("Ошибка загрузки драйвера базы данных: ", e);
         }
         pool.setDriverClassName(cfg.getProperty("jdbc.driver"));
         pool.setUrl(cfg.getProperty("jdbc.url"));
@@ -55,7 +55,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка получения данных SQL: ", e);
         }
         return posts;
     }
@@ -72,7 +72,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка получения данных SQL: ", e);
         }
         return candidates;
     }
@@ -120,7 +120,7 @@ public class PsqlStore implements Store {
             ps.setInt(1, id);
             ps.execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка удаления данных в SQL: ", e);
         }
     }
 
@@ -136,7 +136,7 @@ public class PsqlStore implements Store {
             ps.setString(3, user.getPassword());
             ps.execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка сохранения данных SQL: ", e);
         }
     }
 
@@ -191,7 +191,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка создания данных SQL: ", e);
         }
         return post;
     }
@@ -211,7 +211,7 @@ public class PsqlStore implements Store {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка создание данных SQL: ", e);
         }
         return candidate;
     }
@@ -225,7 +225,7 @@ public class PsqlStore implements Store {
             ps.setInt(2, post.getId());
             ps.execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка обновления данных SQL: ", e);
         }
     }
 
@@ -238,7 +238,7 @@ public class PsqlStore implements Store {
             ps.setInt(2, candidate.getId());
             ps.execute();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Ошибка обновления данных SQL: ", e);
         }
     }
 
