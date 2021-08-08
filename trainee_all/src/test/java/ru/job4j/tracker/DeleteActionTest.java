@@ -14,12 +14,13 @@ public class DeleteActionTest {
     public void whenDeleteTrueId() {
         Output out = new StubOutput();
         MemTracker tracker = new MemTracker();
-        tracker.add(new Item("Delete item"));
+        Item item = new Item("Delete item");
+        tracker.add(item);
         UserAction rep = new DeleteAction(out);
 
         Input input = mock(Input.class);
 
-        when(input.askInt(any(String.class))).thenReturn(1);
+        when(input.askInt(any(String.class))).thenReturn(item.getId());
 
         rep.execute(input, tracker);
 
