@@ -16,6 +16,7 @@
         <module>junior_collection</module>
         <module>middle_thread</module>
         <module>middle_servlet</module>
+        <module>trainee_all</module>
     </modules>
 
     <properties>
