@@ -21,7 +21,17 @@
         }
         return false;
     }
-</script>
+    function addRow() {
+        //получаем значение поля usr
+        const name = $('#name').val();
+        const surname = $('#surname').val();
+        const sex = $('#sex').val();
+        const about = $('#about').val();
+        //получаем ссылку на последний элемент в таблице.
+        //и после него добавляем html
+        $('#table tr:last').after('<tr><td>' + name +'</td><td>' + surname +'</td><td>' + sex +'</td><td>' + about +'</td></tr>');
+    }
+    </script>
 </head>
 <body>
     <div class="container pt-3">
@@ -57,9 +67,10 @@
             <div class="card" style="width: 100%">
                 <div class="card-header">
                     Состав:
+                    <button type="submit" class="btn btn-primary" onclick="addRow()">Add row</button>
                 </div>
                 <div class="card-body">
-                    <table class="table">
+                    <table class="table" id='table'>
                         <thead>
                         <tr>
                             <th scope="col">Имя</th>
