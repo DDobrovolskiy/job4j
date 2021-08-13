@@ -1,6 +1,7 @@
 package ru.job4j.dream.store;
 
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -18,16 +19,21 @@ public class MemStore implements Store {
     private final Map<Integer, Post> posts = new ConcurrentHashMap<>();
     private final Map<Integer, Candidate> candidates = new ConcurrentHashMap<>();
     private final Map<String, User> users = new ConcurrentHashMap<>();
+    private final Map<Integer, City> cities = new ConcurrentHashMap<>();
 
     private MemStore() {
+        /*
         posts.put(1, new Post(1, "Junior Java Job"));
         posts.put(2, new Post(2, "Middle Java Job"));
         posts.put(3, new Post(3, "Senior Java Job"));
-        candidates.put(1, new Candidate(1, "Junior Java"));
-        candidates.put(2, new Candidate(2, "Middle Java"));
-        candidates.put(3, new Candidate(3, "Senior Java"));
+        candidates.put(1, new Candidate(1, "Junior Java", 0));
+        candidates.put(2, new Candidate(2, "Middle Java", 0));
+        candidates.put(3, new Candidate(3, "Senior Java", 0));
         users.put("root@local", new User(1, "Admin", "root@local", "root"));
         users.put("test@test", new User(2, "Test User", "test@test", "test"));
+        cities.put(1, new City(1, "Moscow"));
+        cities.put(2, new City(2, "St. Peterburg"));
+         */
     }
 
     public static MemStore instOf() {
@@ -76,5 +82,20 @@ public class MemStore implements Store {
     @Override
     public User findByEmail(String email) {
         return users.get(email);
+    }
+
+    @Override
+    public Collection<City> findAllCity() {
+        return cities.values();
+    }
+
+    @Override
+    public Collection<Candidate> findAllCandidatesNow() {
+        return null;
+    }
+
+    @Override
+    public Collection<Post> findAllPostNow() {
+        return null;
     }
 }

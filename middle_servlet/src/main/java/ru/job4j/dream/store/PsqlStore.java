@@ -4,6 +4,7 @@ import org.apache.commons.dbcp2.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.dream.model.Candidate;
+import ru.job4j.dream.model.City;
 import ru.job4j.dream.model.Post;
 import ru.job4j.dream.model.User;
 
@@ -47,11 +48,14 @@ public class PsqlStore implements Store {
     public Collection<Post> findAllPosts() {
         List<Post> posts = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT id, name FROM posts")
+             PreparedStatement ps =  cn.prepareStatement("SELECT id, name, data FROM posts")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    posts.add(new Post(it.getInt("id"), it.getString("name")));
+                    posts.add(new Post(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getTimestamp("data").toLocalDateTime()));
                 }
             }
         } catch (Exception e) {
@@ -64,11 +68,16 @@ public class PsqlStore implements Store {
     public Collection<Candidate> findAllCandidates() {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
-             PreparedStatement ps =  cn.prepareStatement("SELECT id, name FROM candidates")
+             PreparedStatement ps = cn.prepareStatement(
+                     "SELECT id, name, citi_id, data FROM candidates ")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
-                    candidates.add(new Candidate(it.getInt("id"), it.getString("name")));
+                    candidates.add(new Candidate(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getInt("citi_id"),
+                            it.getTimestamp("data").toLocalDateTime()));
                 }
             }
         } catch (Exception e) {
@@ -92,9 +101,7 @@ public class PsqlStore implements Store {
         try (Connection cn = pool.getConnection();
              PreparedStatement statement =
                      cn.prepareStatement(
-                             "SELECT id, name "
-                                     + "FROM candidates "
-                                     + "WHERE id = ?")) {
+                             "SELECT id, name, citi_id, data FROM candidates")) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (!resultSet.next()) {
@@ -102,7 +109,9 @@ public class PsqlStore implements Store {
                 } else {
                     candidate = new Candidate(
                             resultSet.getInt("id"),
-                            resultSet.getString("name"));
+                            resultSet.getString("name"),
+                            resultSet.getInt("citi_id"),
+                            resultSet.getTimestamp("data").toLocalDateTime());
                 }
             }
         } catch (Exception e) {
@@ -200,10 +209,11 @@ public class PsqlStore implements Store {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =
                      cn.prepareStatement(
-                             "INSERT INTO candidates(name) VALUES (?)",
+                             "INSERT INTO candidates(name, citi_id) VALUES (?, ?)",
                              PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
+            ps.setInt(2, candidate.getCityId());
             ps.execute();
             try (ResultSet id = ps.getGeneratedKeys()) {
                 if (id.next()) {
@@ -232,10 +242,11 @@ public class PsqlStore implements Store {
     private void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =
-                     cn.prepareStatement("UPDATE candidates SET name = ? WHERE id = ?")
+                     cn.prepareStatement("UPDATE candidates SET name = ?, citi_id = ? WHERE id = ?")
         ) {
             ps.setString(1, candidate.getName());
-            ps.setInt(2, candidate.getId());
+            ps.setInt(2, candidate.getCityId());
+            ps.setInt(3, candidate.getId());
             ps.execute();
         } catch (Exception e) {
             LOG.error("Ошибка обновления данных SQL: ", e);
@@ -246,9 +257,9 @@ public class PsqlStore implements Store {
     public Post findById(int id) {
         Post post = null;
         try (Connection cn = pool.getConnection();
-                PreparedStatement statement =
-                        cn.prepareStatement(
-                             "SELECT id, name "
+             PreparedStatement statement =
+                     cn.prepareStatement(
+                             "SELECT id, name, data "
                                      + "FROM posts "
                                      + "WHERE id = ?")) {
             statement.setInt(1, id);
@@ -258,12 +269,104 @@ public class PsqlStore implements Store {
                 } else {
                     post = new Post(
                             resultSet.getInt("id"),
-                            resultSet.getString("name"));
+                            resultSet.getString("name"),
+                            resultSet.getTimestamp("data").toLocalDateTime());
                 }
             }
         } catch (Exception e) {
             LOG.error("Ошибка получения данных SQL: ", e);
         }
         return post;
+    }
+
+    @Override
+    public Collection<City> findAllCity() {
+        List<City> cities = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(
+                     "SELECT citi_id, citi_name FROM cities")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    cities.add(new City(
+                            it.getInt("citi_id"),
+                            it.getString("citi_name")));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Ошибка получения данных SQL: ", e);
+        }
+        return cities;
+    }
+
+    public City findCityById(int id) {
+        City city = null;
+        try (Connection cn = pool.getConnection();
+             PreparedStatement statement =
+                     cn.prepareStatement(
+                             "SELECT citi_id, citi_name "
+                                     + "FROM cities "
+                                     + "WHERE citi_id = ?")) {
+            statement.setInt(1, id);
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (!resultSet.next()) {
+                    LOG.warn("Не найдена запись поста с id = {}", id);
+                } else {
+                    city = new City(
+                            resultSet.getInt("citi_id"),
+                            resultSet.getString("citi_name"));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Ошибка получения данных SQL: ", e);
+        }
+        return city;
+    }
+
+    @Override
+    public Collection<Candidate> findAllCandidatesNow() {
+        List<Candidate> candidates = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(
+                     "SELECT id, name, citi_id, data FROM candidates "
+                             + "WHERE data "
+                             + "BETWEEN current_timestamp - interval '1 day' AND current_timestamp")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    candidates.add(new Candidate(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getInt("citi_id"),
+                            it.getTimestamp("data").toLocalDateTime()));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Ошибка получения данных SQL: ", e);
+        }
+        return candidates;
+    }
+
+    @Override
+    public Collection<Post> findAllPostNow() {
+        List<Post> posts = new ArrayList<>();
+        try (Connection cn = pool.getConnection();
+             PreparedStatement ps = cn.prepareStatement(
+                     "SELECT id, name, data FROM posts "
+                             + "WHERE data "
+                             + "BETWEEN current_timestamp - interval '1 day' AND current_timestamp")
+        ) {
+            try (ResultSet it = ps.executeQuery()) {
+                while (it.next()) {
+                    posts.add(new Post(
+                            it.getInt("id"),
+                            it.getString("name"),
+                            it.getTimestamp("data").toLocalDateTime()));
+                }
+            }
+        } catch (Exception e) {
+            LOG.error("Ошибка получения данных SQL: ", e);
+        }
+        return posts;
     }
 }

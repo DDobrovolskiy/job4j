@@ -3,6 +3,7 @@ package ru.job4j.dream.servlet;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import static org.mockito.Mockito.*;
@@ -29,7 +31,7 @@ public class PostServletTest {
     public void doGet() throws ServletException, IOException {
         var store = MemStore.instOf();
 
-        Post post = new Post(0, "Powermock");
+        Post post = new Post(0, "Powermock", LocalDateTime.now());
         store.save(post);
 
         PowerMockito.mockStatic(PsqlStore.class);
@@ -37,12 +39,12 @@ public class PostServletTest {
 
         var req = mock(HttpServletRequest.class);
         var resp = mock(HttpServletResponse.class);
-        when(req.getRequestDispatcher("posts.jsp")).thenReturn(mock(RequestDispatcher.class));
+        var disp = mock(RequestDispatcher.class);
+        when(req.getRequestDispatcher("posts.jsp")).thenReturn(disp);
 
         new PostServlet().doGet(req, resp);
 
-        System.out.println(req.getAttribute("posts"));
-
+        System.out.println();
         //var posts = (Collection<Post>) req.getAttribute("posts");
         //System.out.println(posts.contains(post));
         //posts.forEach(System.out::println);
