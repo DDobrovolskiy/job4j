@@ -10,19 +10,40 @@ import ru.job4j.dream.model.Candidate;
 import ru.job4j.dream.store.MemStore;
 import ru.job4j.dream.store.PsqlStore;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.hamcrest.core.Is.is;
+import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
 @PrepareForTest(PsqlStore.class)
 public class CandidateServletTest {
+
+    @Test
+    public void doGet() throws ServletException, IOException {
+        var store = MemStore.instOf();
+
+        Candidate candidate = new Candidate(0, "Powermock", 1, LocalDateTime.now());
+        store.save(candidate);
+
+        PowerMockito.mockStatic(PsqlStore.class);
+        PowerMockito.when(PsqlStore.instOf()).thenReturn(store);
+
+        var req = mock(HttpServletRequest.class);
+        var resp = mock(HttpServletResponse.class);
+        var disp = mock(RequestDispatcher.class);
+        when(req.getRequestDispatcher("candidates.jsp")).thenReturn(disp);
+
+        new CandidateServlet().doGet(req, resp);
+
+        verify(req).getRequestDispatcher("candidates.jsp");
+    }
 
     @Test
     public void doPost() throws ServletException, IOException {
@@ -31,13 +52,6 @@ public class CandidateServletTest {
 
         var store = MemStore.instOf();
 
-        //Проверяем что изночально в мемсторе нету такого имени
-        for (Candidate candidate : store.findAllCandidates()) {
-            if (candidate.getName().equals(name)) {
-                flag = true;
-                break;
-            }
-        }
         Assert.assertFalse(flag);
 
         PowerMockito.mockStatic(PsqlStore.class);
@@ -48,16 +62,10 @@ public class CandidateServletTest {
 
         when(req.getParameter("id")).thenReturn("0");
         when(req.getParameter("name")).thenReturn(name);
+        when(req.getParameter("city")).thenReturn("1");
 
         new CandidateServlet().doPost(req, resp);
 
-        //Теперь должно быть
-        for (Candidate candidate : store.findAllCandidates()) {
-            if (candidate.getName().equals(name)) {
-                flag = true;
-                break;
-            }
-        }
-        Assert.assertTrue(flag);
+        Assert.assertThat(store.findAllCandidates().iterator().next().getName(), is(name));
     }
 }

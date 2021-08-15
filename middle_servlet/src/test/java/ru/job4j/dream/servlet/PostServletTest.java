@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+import static org.hamcrest.core.Is.is;
 import static org.mockito.Mockito.*;
 
 @RunWith(PowerMockRunner.class)
@@ -44,10 +45,7 @@ public class PostServletTest {
 
         new PostServlet().doGet(req, resp);
 
-        System.out.println();
-        //var posts = (Collection<Post>) req.getAttribute("posts");
-        //System.out.println(posts.contains(post));
-        //posts.forEach(System.out::println);
+        verify(req).getRequestDispatcher("posts.jsp");
     }
 
     @Test
@@ -56,15 +54,6 @@ public class PostServletTest {
         String name = "name";
 
         var store = MemStore.instOf();
-
-        //Проверяем что изночально в мемсторе нету такого имени
-        for (Post post : store.findAllPosts()) {
-            if (post.getName().equals(name)) {
-                flag = true;
-                break;
-            }
-        }
-        Assert.assertFalse(flag);
 
         PowerMockito.mockStatic(PsqlStore.class);
         PowerMockito.when(PsqlStore.instOf()).thenReturn(store);
@@ -77,13 +66,6 @@ public class PostServletTest {
 
         new PostServlet().doPost(req, resp);
 
-        //Теперь должно быть
-        for (Post post : store.findAllPosts()) {
-            if (post.getName().equals(name)) {
-                flag = true;
-                break;
-            }
-        }
-        Assert.assertTrue(flag);
+        Assert.assertThat(store.findAllPosts().iterator().next().getName(), is(name));
     }
 }
