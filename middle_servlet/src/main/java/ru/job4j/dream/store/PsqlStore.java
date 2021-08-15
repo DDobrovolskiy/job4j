@@ -69,14 +69,14 @@ public class PsqlStore implements Store {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "SELECT id, name, citi_id, data FROM candidates ")
+                     "SELECT id, name, city_id, data FROM candidates ")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
                     candidates.add(new Candidate(
                             it.getInt("id"),
                             it.getString("name"),
-                            it.getInt("citi_id"),
+                            it.getInt("city_id"),
                             it.getTimestamp("data").toLocalDateTime()));
                 }
             }
@@ -101,7 +101,7 @@ public class PsqlStore implements Store {
         try (Connection cn = pool.getConnection();
              PreparedStatement statement =
                      cn.prepareStatement(
-                             "SELECT id, name, citi_id, data FROM candidates")) {
+                             "SELECT id, name, city_id, data FROM candidates")) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (!resultSet.next()) {
@@ -110,7 +110,7 @@ public class PsqlStore implements Store {
                     candidate = new Candidate(
                             resultSet.getInt("id"),
                             resultSet.getString("name"),
-                            resultSet.getInt("citi_id"),
+                            resultSet.getInt("city_id"),
                             resultSet.getTimestamp("data").toLocalDateTime());
                 }
             }
@@ -209,7 +209,7 @@ public class PsqlStore implements Store {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =
                      cn.prepareStatement(
-                             "INSERT INTO candidates(name, citi_id) VALUES (?, ?)",
+                             "INSERT INTO candidates(name, city_id) VALUES (?, ?)",
                              PreparedStatement.RETURN_GENERATED_KEYS)
         ) {
             ps.setString(1, candidate.getName());
@@ -242,7 +242,7 @@ public class PsqlStore implements Store {
     private void update(Candidate candidate) {
         try (Connection cn = pool.getConnection();
              PreparedStatement ps =
-                     cn.prepareStatement("UPDATE candidates SET name = ?, citi_id = ? WHERE id = ?")
+                     cn.prepareStatement("UPDATE candidates SET name = ?, city_id = ? WHERE id = ?")
         ) {
             ps.setString(1, candidate.getName());
             ps.setInt(2, candidate.getCityId());
@@ -284,13 +284,13 @@ public class PsqlStore implements Store {
         List<City> cities = new ArrayList<>();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "SELECT citi_id, citi_name FROM cities")
+                     "SELECT city_id, city_name FROM cities")
         ) {
             try (ResultSet it = ps.executeQuery()) {
                 while (it.next()) {
                     cities.add(new City(
-                            it.getInt("citi_id"),
-                            it.getString("citi_name")));
+                            it.getInt("city_id"),
+                            it.getString("city_name")));
                 }
             }
         } catch (Exception e) {
@@ -304,17 +304,17 @@ public class PsqlStore implements Store {
         try (Connection cn = pool.getConnection();
              PreparedStatement statement =
                      cn.prepareStatement(
-                             "SELECT citi_id, citi_name "
+                             "SELECT city_id, city_name "
                                      + "FROM cities "
-                                     + "WHERE citi_id = ?")) {
+                                     + "WHERE city_id = ?")) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
                 if (!resultSet.next()) {
                     LOG.warn("Не найдена запись поста с id = {}", id);
                 } else {
                     city = new City(
-                            resultSet.getInt("citi_id"),
-                            resultSet.getString("citi_name"));
+                            resultSet.getInt("city_id"),
+                            resultSet.getString("city_name"));
                 }
             }
         } catch (Exception e) {
@@ -328,7 +328,7 @@ public class PsqlStore implements Store {
         List<Candidate> candidates = new ArrayList<>();
         try (Connection cn = pool.getConnection();
              PreparedStatement ps = cn.prepareStatement(
-                     "SELECT id, name, citi_id, data FROM candidates "
+                     "SELECT id, name, city_id, data FROM candidates "
                              + "WHERE data "
                              + "BETWEEN current_timestamp - interval '1 day' AND current_timestamp")
         ) {
@@ -337,7 +337,7 @@ public class PsqlStore implements Store {
                     candidates.add(new Candidate(
                             it.getInt("id"),
                             it.getString("name"),
-                            it.getInt("citi_id"),
+                            it.getInt("city_id"),
                             it.getTimestamp("data").toLocalDateTime()));
                 }
             }
