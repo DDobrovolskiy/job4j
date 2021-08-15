@@ -29,9 +29,6 @@ public class CandidateServletTest {
     public void doGet() throws ServletException, IOException {
         var store = MemStore.instOf();
 
-        Candidate candidate = new Candidate(0, "Powermock", 1, LocalDateTime.now());
-        store.save(candidate);
-
         PowerMockito.mockStatic(PsqlStore.class);
         PowerMockito.when(PsqlStore.instOf()).thenReturn(store);
 

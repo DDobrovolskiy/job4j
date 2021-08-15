@@ -32,9 +32,6 @@ public class PostServletTest {
     public void doGet() throws ServletException, IOException {
         var store = MemStore.instOf();
 
-        Post post = new Post(0, "Powermock", LocalDateTime.now());
-        store.save(post);
-
         PowerMockito.mockStatic(PsqlStore.class);
         PowerMockito.when(PsqlStore.instOf()).thenReturn(store);
 
