@@ -12,9 +12,9 @@ public class CORSFilter implements Filter {
             throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) sreq;
 
-        ((HttpServletResponse) sreq).addHeader(
+        ((HttpServletResponse) sresp).addHeader(
                 "Access-Control-Allow-Origin", "*");
-        ((HttpServletResponse) sreq).addHeader(
+        ((HttpServletResponse) sresp).addHeader(
                 "Access-Control-Allow-Methods", "GET, OPTIONS, HEAD, PUT, POST");
 
         HttpServletResponse resp = (HttpServletResponse) sresp;
