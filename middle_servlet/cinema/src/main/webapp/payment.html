@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Home cinema</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function validate() {
+                if($('#username').val() == '') {
+                    alert($('#username').attr('title'));
+                    return false;
+                } else  if($('#phone').val() == '') {
+                    alert($('#phone').attr('title'));
+                    return false;
+                }
+                return true;
+            }
+    </script>
+    <script>
+        function getParam(name) {
+            var scr = window.location.search;
+            scr = scr.match(new RegExp(name + '=([^&=]+)'));
+            return scr ? scr[1] : false;
+        }
+    </script>
+    <script>
+    var tic;
+
+        $(document).ready(function () {
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/cinema/pay',
+        data: 'idTic=' + getParam('idTic'),
+        dataType: 'json'
+    }).done(function (data) {
+        tic = data;
+        var html = 'Вы выбрали ряд ' + tic.row + ' место ' + tic.cell + ', Сумма : ' + tic.price + ' рублей.';
+        $('#h').append(html);
+    }).fail(function (err) {
+        console.log(err);
+    });
+    });
+
+    function execute() {
+            if (validate()) {
+                pay();
+            }
+        };
+
+    function pay() {
+        var us = $('#username').val();
+        var ph = $('#phone').val();
+        var ti = tic.ticketId;
+        $.ajax({
+        type: 'POST',
+        url: 'http://localhost:8080/cinema/pay?username='+us+'&phone='+ph+'&ticketId='+ti,
+        dataType: 'json'
+    }).done(function (data) {
+        alert(data.message);
+        window.location.href='http://localhost:8080/cinema';
+    }).fail(function (err) {
+        console.log(err);
+    });
+    };
+    </script>
+</head>
+<body>
+<div class="container">
+    <div class="row pt-3">
+        <h3 id="h">
+        </h3>
+    </div>
+    <div class="row">
+        <form>
+            <div class="form-group">
+                <label for="username">ФИО</label>
+                <input type="text" class="form-control" id="username" placeholder="ФИО" title="Enter username" name="username">
+            </div>
+            <div class="form-group">
+                <label for="phone">Номер телефона</label>
+                <input type="text" class="form-control" id="phone" placeholder="Номер телефона" title="Enter phone" name="phone">
+            </div>
+            <button type="button" class="btn btn-success" onclick="execute()">Оплатить</button>
+        </form>
+    </div>
+</div>
+</body>
+</html>

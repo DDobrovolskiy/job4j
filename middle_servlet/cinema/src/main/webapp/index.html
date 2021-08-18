@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Home cinema</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script>
+        function load() {
+        $.ajax({
+            type: 'GET',
+            url: 'http://localhost:8080/cinema/hall',
+            dataType: 'json'
+        }).done(function (data) {
+            var html = '<table class="table table-bordered" id="dataTable">';
+            var indexRow = 1;
+            html += '';
+            html += '<thead><tr><th style="width: 120px;">Ряд / Место</th>';
+            for(var cell = 1; cell <= data[0].length; cell++) {
+                html += '<th>'+cell+'</th>';
+            }
+            html += '</thead></tr><tbody>';
+    
+            for(var row = 0; row < data.length; row++) {
+                html += '<tr><th>'+ indexRow++ + '</th>';
+                for(var cell = 0; cell < data[row].length; cell++) {
+                html += '<td>';
+                    if(data[row][cell].accountId == 0) {
+                    html += '<input id="rad" type="radio" name="place" value="'+ data[row][cell].ticketId 
+                        + '">'
+                        + ' Ряд ' + data[row][cell].row
+                        + ' Место ' + data[row][cell].cell
+                        + ' Стоимость ' + data[row][cell].price;
+                    } else {
+                        html += 'Забронировано';
+                    }
+                    html += '</td>';
+                }
+                html += '</tr>';
+            }
+            html += '</tbody></table>';
+            $('#dataTable').replaceWith(html);
+        }).fail(function (err) {
+            console.log(err);
+        });
+        };
+        </script>
+        <script>
+        $(document).ready(function () {
+            load();
+            setInterval('load()', 10000);
+        });
+        </script>
+        <script>
+            function payment() {
+                var ticId = $('input[name=place]:checked', '#dataTable').val();
+                window.location.href='http://localhost:8080/cinema/payment.html?idTic=' + ticId;
+            }
+        </script>
+    </head>
+    <body>
+    <div class="container">
+        <div class="row pt-3">
+            <h4>
+                Бронирование мест на сеанс
+            </h4>
+            <table class="table table-bordered" id="dataTable">
+            </table>
+        </div>
+        <div class="row float-right">
+            <button type="button" class="btn btn-success" onclick="payment()">Оплатить</button>
+        </div>
+    </div>
+    </body>
+    </html>
