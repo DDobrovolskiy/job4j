@@ -17,6 +17,7 @@
         <module>middle_thread</module>
         <module>middle_servlet</module>
         <module>trainee_all</module>
+        <module>middle_hibernate</module>
     </modules>
 
     <properties>
