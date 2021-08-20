@@ -3,7 +3,10 @@
 
 [![Build Status](https://www.travis-ci.com/DDobrovolskiy/job4j.svg?branch=master)](https://www.travis-ci.com/DDobrovolskiy/job4j)
 [![codecov](https://codecov.io/gh/DDobrovolskiy/job4j/branch/master/graph/badge.svg?token=J00S19M9SK)](https://codecov.io/gh/DDobrovolskiy/job4j)
-
+# Модуль trainee_all
+- основы программирования
+- лямбды
+- простые коллекции
 # Модуль junior_collection
 - использование Iterator
 - введение в Generic
@@ -35,4 +38,7 @@
 - проект "Pooh JMS" асинхронная очередь аналогично RabbitMQ
 # Модуль middle_servlet
 - введение в Git
-- Apache Tomcat
+- основы servlet, *.jsp, JSTL
+- веб-сервер Apache Tomcat
+- основы JS, jQuery (ajax)
+- проект кинотеатр и сайт вакансий 
