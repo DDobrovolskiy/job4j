@@ -35,4 +35,7 @@
 - проект "Pooh JMS" асинхронная очередь аналогично RabbitMQ
 # Модуль middle_servlet
 - введение в Git
-- Apache Tomcat
+- основы servlet, *.jsp, JSTL
+- веб-сервер Apache Tomcat
+- основы JS, jQuery (ajax)
+- проект кинотеатр и сайт вакансий 
