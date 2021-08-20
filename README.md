@@ -42,3 +42,5 @@
 - веб-сервер Apache Tomcat
 - основы JS, jQuery (ajax)
 - проект кинотеатр и сайт вакансий 
+# Модуль middle_hibernate
+- основы Hibernate
