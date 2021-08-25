@@ -33,7 +33,7 @@ public class HbmTracker implements Store, AutoCloseable {
 
     @Override
     public boolean replace(int id, Item item) {
-        try(var session = sf.openSession()) {
+        try (var session = sf.openSession()) {
             session.beginTransaction();
             item.setId(id);
             session.update(item);
@@ -49,7 +49,7 @@ public class HbmTracker implements Store, AutoCloseable {
 
     @Override
     public boolean delete(int id) {
-        try(var session = sf.openSession()) {
+        try (var session = sf.openSession()) {
             session.beginTransaction();
             session.delete(new Item(id, null));
             session.getTransaction().commit();
