@@ -32,7 +32,8 @@ public class StartUI {
     }
 
     public static void main(String[] args) {
-        try (Store tracker = new SqlTracker(ConnectionSQL.get())) {
+        //Store tracker = new SqlTracker(ConnectionSQL.get())
+        try (Store tracker = new HbmTracker()) {
             Output output = new ConsoleOutput();
             Input input = new ValidateInput(output, new ConsoleInput());
             List<UserAction> actions = new LinkedList<>();
