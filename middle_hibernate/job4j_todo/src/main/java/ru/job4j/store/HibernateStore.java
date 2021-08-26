@@ -2,13 +2,14 @@ package ru.job4j.store;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.model.Item;
 
 import java.util.Collection;
+import java.util.function.Function;
 
 public class HibernateStore implements Store, AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(HibernateStore.class.getName());
@@ -24,42 +25,20 @@ public class HibernateStore implements Store, AutoCloseable {
 
     @Override
     public Collection<Item> getAllItem() {
-        Collection result = null;
-        LOG.debug("Start session - getAllItem");
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            result = session.createQuery("from ru.job4j.model.Item").list();
-            LOG.debug("Result: {}", result);
-            session.getTransaction().commit();
-            session.close();
-        }
-        LOG.debug("Return result");
-        return result;
+        return this.tx(session -> session.createQuery("from ru.job4j.model.Item").list());
     }
 
     @Override
     public Collection<Item> getOnlyDidntDoneItem() {
-        Collection result = null;
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            Query query = session.createQuery("from ru.job4j.model.Item WHERE done = :itemsDone");
-            query.setParameter("itemsDone", false);
-            result = query.list();
-            session.getTransaction().commit();
-            session.close();
-        }
-        return result;
+        return  this.tx(session ->
+            session.createQuery("from ru.job4j.model.Item WHERE done = :itemsDone")
+                .setParameter("itemsDone", false)
+                .list());
     }
 
     @Override
     public void save(Item item) {
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            session.save(item);
-            session.getTransaction().commit();
-            session.close();
-            LOG.debug("Add item in sql: {}", item);
-        }
+        this.tx(session -> session.save(item));
     }
 
     @Override
@@ -79,22 +58,13 @@ public class HibernateStore implements Store, AutoCloseable {
 
     @Override
     public boolean updateDone(int id, boolean done) {
-        LOG.debug("UpdateDone");
-        try (Session session = sf.openSession()) {
-            session.beginTransaction();
-            Query query = session.createQuery(
-                    "UPDATE ru.job4j.model.Item SET done = :itemsDone WHERE id = :itemsId");
-            query.setParameter("itemsId", id);
-            query.setParameter("itemsDone", done);
-            int i = query.executeUpdate();
-            session.getTransaction().commit();
-            session.close();
-            LOG.debug("UpdateDone - close");
-            return i == 1;
-        } catch (Exception e) {
-            LOG.error("Error update done", e);
-        }
-        return false;
+        int i = this.tx(session ->
+                session.createQuery(
+                        "UPDATE ru.job4j.model.Item SET done = :itemsDone WHERE id = :itemsId")
+        .setParameter("itemsDone", done)
+        .setParameter("itemsId", id)
+        .executeUpdate());
+        return i == 1;
     }
 
     @Override
@@ -111,6 +81,21 @@ public class HibernateStore implements Store, AutoCloseable {
         } catch (Exception e) {
             LOG.error("Don`t delete item", e);
             return false;
+        }
+    }
+
+    private <T> T tx(final Function<Session, T> command) {
+        final Session session = sf.openSession();
+        final Transaction tx = session.beginTransaction();
+        try {
+            T rsl = command.apply(session);
+            tx.commit();
+            return rsl;
+        } catch (final Exception e) {
+            session.getTransaction().rollback();
+            throw e;
+        } finally {
+            session.close();
         }
     }
 
