@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS items (
+  id SERIAL PRIMARY KEY,
+  description VARCHAR NOT NULL,
+  createdTime TIMESTAMP NOT NULL DEFAULT current_timestamp,
+  done BOOLEAN NOT NULL DEFAULT false
+);

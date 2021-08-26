@@ -11,6 +11,7 @@ before_install:
   - psql -c 'CREATE DATABASE dreamjob' -U postgres
   - psql -c 'CREATE DATABASE tracker' -U postgres
   - psql -c 'CREATE DATABASE cinema' -U postgres
+  - psql -c 'CREATE DATABASE todo' -U postgres
 
 env:
   global:
