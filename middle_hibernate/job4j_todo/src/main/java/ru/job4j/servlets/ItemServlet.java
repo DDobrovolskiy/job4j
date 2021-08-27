@@ -5,9 +5,11 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.model.Item;
+import ru.job4j.model.User;
 import ru.job4j.store.HibernateStore;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -18,6 +20,7 @@ import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+@WebServlet("/index")
 public class ItemServlet extends HttpServlet {
     private static final Logger LOG = LoggerFactory.getLogger(ItemServlet.class.getName());
     private static final Gson GSON = new GsonBuilder().create();
@@ -30,6 +33,9 @@ public class ItemServlet extends HttpServlet {
         OutputStream output = resp.getOutputStream();
         Collection<Item> items = null;
         String checked = req.getParameter("all");
+        if (checked == null) {
+            checked = "false";
+        }
         if (checked.equals("false")) {
             items = HibernateStore.instOf().getOnlyDidntDoneItem();
         } else {
@@ -42,6 +48,7 @@ public class ItemServlet extends HttpServlet {
         output.write(json.getBytes(StandardCharsets.UTF_8));
         output.flush();
         output.close();
+        resp.sendRedirect(req.getContextPath() + "/");
     }
 
     @Override
@@ -51,7 +58,6 @@ public class ItemServlet extends HttpServlet {
         Item item = GSON.fromJson(req.getReader(), Item.class);
         LOG.debug("id item: {} - is done: {}", item.getId(), item.isDone());
         HibernateStore.instOf().updateDone(item.getId(), item.isDone());
-        //HibernateStore.instOf().update(item);
     }
 
     @Override
@@ -60,6 +66,7 @@ public class ItemServlet extends HttpServlet {
         LOG.debug("Begin doPut");
         Item item = GSON.fromJson(req.getReader(), Item.class);
         item.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
+        item.setUser((User) req.getSession().getAttribute("user"));
         LOG.debug("Desc item: {}", item.getDescription());
         HibernateStore.instOf().save(item);
     }

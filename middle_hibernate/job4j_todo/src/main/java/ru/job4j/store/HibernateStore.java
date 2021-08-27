@@ -7,8 +7,10 @@ import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.model.Item;
+import ru.job4j.model.User;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.function.Function;
 
 public class HibernateStore implements Store, AutoCloseable {
@@ -82,6 +84,21 @@ public class HibernateStore implements Store, AutoCloseable {
             LOG.error("Don`t delete item", e);
             return false;
         }
+    }
+
+    @Override
+    public Optional<User> findUserByEmail(String email) {
+        return this.tx(session ->
+                session.createQuery("from ru.job4j.model.User WHERE email_user = :emailUser")
+                        .setParameter("emailUser", email)
+                        .list()
+                        .stream()
+                        .findFirst());
+    }
+
+    @Override
+    public void addUser(User user) {
+        this.tx(session -> session.save(user));
     }
 
     private <T> T tx(final Function<Session, T> command) {

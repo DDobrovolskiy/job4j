@@ -1,8 +1,10 @@
 package ru.job4j.store;
 
 import ru.job4j.model.Item;
+import ru.job4j.model.User;
 
 import java.util.Collection;
+import java.util.Optional;
 
 public interface Store {
     Collection<Item> getAllItem();
@@ -16,4 +18,8 @@ public interface Store {
     boolean updateDone(int id, boolean done);
 
     boolean delete(int id);
+
+    Optional<User> findUserByEmail(String email);
+
+    void addUser(User user);
 }

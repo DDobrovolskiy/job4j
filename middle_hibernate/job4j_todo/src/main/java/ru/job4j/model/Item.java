@@ -9,9 +9,15 @@ public class Item {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "description", nullable = false)
     private String description;
+    @Column(name = "createdTime", nullable = false)
     private Timestamp createdTime;
+    @Column(name = "done", nullable = false)
     private boolean done;
+    @ManyToOne
+    @JoinColumn(name = "id_user", nullable = false)
+    private User user;
 
     public Item() {
     }
@@ -46,5 +52,13 @@ public class Item {
 
     public void setDone(boolean done) {
         this.done = done;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

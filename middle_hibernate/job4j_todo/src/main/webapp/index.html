@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Bootstrap Example</title>
+    <title>ToDo List</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
@@ -13,6 +13,13 @@
 <body>
     <div class="container pt-3">
         <div class="row">
+            <div class="card-body">
+                <form action="/todo/user" method="POST">
+                    <h4 id="logging">Имя </h4> 
+                    <button type="submit" class="btn">Выйти</button>
+                </form>
+            </div>
+            
             <div class="card" style="width: 100%">
                 <div class="card-header">
                     Добавить новое задание
@@ -41,6 +48,7 @@
                             <th scope="col">Выполнено</th>
                             <th scope="col">Дата создания</th>
                             <th scope="col">Описание</th>
+                            <th scope="col">Автор</th>
                         </tr>
                         </thead>
                         <tbody id='dataTable'>

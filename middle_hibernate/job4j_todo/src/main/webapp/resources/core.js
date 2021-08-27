@@ -1,4 +1,5 @@
 load(false)
+logging()
 
 function validate() {
     if($('#description').val() == '') {
@@ -19,6 +20,7 @@ function chengeAll() {
     let all = allItems.checked
     console.log(all)
     load(all)
+    logging()
 }
 
 function load(all) {
@@ -31,6 +33,7 @@ function load(all) {
             let html = '<tbody id="dataTable">'
             for(let item of data)
             {
+                console.log(item)
                 html += '<tr>'
                     html += '<td>'
                     html += '<input type="checkbox" id=' + item.id + ' ' + getCheck(item.done) +' onclick="update('+ item.id + ', checked)">'
@@ -40,6 +43,9 @@ function load(all) {
                     html += '</td>'
                     html += '<td>'
                     html += item.description
+                    html += '</td>'
+                    html += '<td>'
+                    html += item.user.name
                     html += '</td>' 
                 html += '</tr>'   
             }
@@ -86,10 +92,26 @@ function update(i, c) {
     id: i,
     description: null,
     createdTime: null,
-    done: c
+    done: c,
+    user: null
 })
 }).done(
 ).fail(function (err) {
 console.log(err);
 });
+}
+
+function logging() {
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/todo/user',
+        dataType: 'json'
+    }).done(function (data) {
+        console.log(data)
+        let html = '<h4 id="logging">' + data.name + '</h4>'
+        $('#logging').replaceWith(html)
+    }
+    ).fail(function (err) {
+    console.log(err);
+    });
 }
