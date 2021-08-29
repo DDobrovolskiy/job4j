@@ -1,7 +1,7 @@
 package ru.job4j.store;
 
-import ru.job4j.model.Item;
-import ru.job4j.model.User;
+import ru.job4j.models.Item;
+import ru.job4j.models.User;
 
 import java.util.Collection;
 import java.util.Optional;

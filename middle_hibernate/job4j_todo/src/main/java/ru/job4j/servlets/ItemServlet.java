@@ -4,8 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.job4j.model.Item;
-import ru.job4j.model.User;
+import ru.job4j.models.Item;
+import ru.job4j.models.User;
 import ru.job4j.store.HibernateStore;
 
 import javax.servlet.ServletException;

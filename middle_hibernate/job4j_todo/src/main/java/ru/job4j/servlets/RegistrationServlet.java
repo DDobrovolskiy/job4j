@@ -2,7 +2,7 @@ package ru.job4j.servlets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.job4j.model.User;
+import ru.job4j.models.User;
 import ru.job4j.store.HibernateStore;
 
 import javax.servlet.ServletException;

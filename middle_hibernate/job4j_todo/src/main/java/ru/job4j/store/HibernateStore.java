@@ -6,8 +6,8 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.job4j.model.Item;
-import ru.job4j.model.User;
+import ru.job4j.models.Item;
+import ru.job4j.models.User;
 
 import java.util.Collection;
 import java.util.Optional;
