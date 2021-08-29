@@ -9,30 +9,27 @@ import ru.job4j.models.Mark;
 import java.util.LinkedList;
 import java.util.List;
 
-public class HbmRun {
+public class HbmLazyRun {
     public static void main(String[] args) {
-
+        List<Mark> marks = new LinkedList<>();
         try (SessionFactory sf = new Configuration().configure().buildSessionFactory()) {
             Session session = sf.openSession();
             session.beginTransaction();
 
-            Mark audi = Mark.of("Audi");
+            marks = session
+                    .createQuery("select distinct m from Mark m join fetch m.cars")
+                    .list();
 
-            List<Car> cars = new LinkedList<>();
-            cars.add(Car.of("A1", audi));
-            cars.add(Car.of("A3", audi));
-            cars.add(Car.of("A4", audi));
-            cars.add(Car.of("Q3", audi));
-            cars.add(Car.of("Q7", audi));
-
-            cars.forEach(audi::addCar);
-
-            session.persist(audi);
+            //Mark audi = session.get(Mark.class, 1);
+            //System.out.println(audi);
 
             session.getTransaction().commit();
             session.close();
         }  catch (Exception e) {
             e.printStackTrace();
         }
+        System.out.println("Result:");
+        System.out.println(marks);
+
     }
 }

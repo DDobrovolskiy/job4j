@@ -9,10 +9,11 @@ import java.util.List;
 public class Mark {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "mark_id")
     private int id;
     @Column(name = "mark_name")
     private String name;
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "mark", cascade = CascadeType.ALL)
     private List<Car> cars = new ArrayList<>();
 
     public static Mark of(String name) {
@@ -47,5 +48,14 @@ public class Mark {
 
     public void addCar(Car car) {
         cars.add(car);
+    }
+
+    @Override
+    public String toString() {
+        return "Mark{"
+                + "id=" + id
+                + ", name='" + name + '\''
+                + ", cars=" + cars
+                + '}';
     }
 }
