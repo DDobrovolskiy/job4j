@@ -13,13 +13,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.LinkedList;
+import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @WebServlet("/addItem")
 public class AddItemServlet extends HttpServlet {
@@ -36,7 +32,7 @@ public class AddItemServlet extends HttpServlet {
         LOG.debug("categoriesId count: {}", categoriesId.length);
         Item item = new Item();
         item.setDescription(desc);
-        item.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
+        item.setCreatedTime(Date.from(Instant.now()));
         item.setUser((User) req.getSession().getAttribute("user"));
         for (String id : categoriesId) {
             Optional<Category> category =

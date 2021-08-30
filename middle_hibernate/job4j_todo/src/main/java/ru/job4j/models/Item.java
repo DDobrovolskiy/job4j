@@ -1,7 +1,7 @@
 package ru.job4j.models;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,8 +13,9 @@ public class Item {
     private int id;
     @Column(name = "description", nullable = false)
     private String description;
+    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "createdTime", nullable = false)
-    private Timestamp createdTime;
+    private Date createdTime;
     @Column(name = "done", nullable = false)
     private boolean done;
     @ManyToOne
@@ -46,11 +47,11 @@ public class Item {
         this.description = description;
     }
 
-    public Timestamp getCreatedTime() {
+    public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(Timestamp createdTime) {
+    public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
     }
 

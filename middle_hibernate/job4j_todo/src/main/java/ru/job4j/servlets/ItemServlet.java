@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.job4j.models.Item;
-import ru.job4j.models.User;
 import ru.job4j.store.HibernateStore;
 
 import javax.servlet.ServletException;
@@ -16,8 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
 import java.util.Collection;
 
 @WebServlet("/index")
