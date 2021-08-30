@@ -59,15 +59,4 @@ public class ItemServlet extends HttpServlet {
         LOG.debug("id item: {} - is done: {}", item.getId(), item.isDone());
         HibernateStore.instOf().updateDone(item.getId(), item.isDone());
     }
-
-    @Override
-    protected void doPut(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
-        LOG.debug("Begin doPut");
-        Item item = GSON.fromJson(req.getReader(), Item.class);
-        item.setCreatedTime(Timestamp.valueOf(LocalDateTime.now()));
-        item.setUser((User) req.getSession().getAttribute("user"));
-        LOG.debug("Desc item: {}", item.getDescription());
-        HibernateStore.instOf().save(item);
-    }
 }

@@ -6,10 +6,12 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import ru.job4j.models.Category;
 import ru.job4j.models.Item;
 import ru.job4j.models.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
@@ -27,13 +29,16 @@ public class HibernateStore implements Store, AutoCloseable {
 
     @Override
     public Collection<Item> getAllItem() {
-        return this.tx(session -> session.createQuery("from ru.job4j.model.Item").list());
+        return this.tx(session -> session
+                .createQuery("select distinct i from Item i join fetch i.categories")
+                .list());
     }
 
     @Override
     public Collection<Item> getOnlyDidntDoneItem() {
-        return  this.tx(session ->
-            session.createQuery("from ru.job4j.model.Item WHERE done = :itemsDone")
+        return  this.tx(session -> session
+                .createQuery("select distinct i from Item i join fetch i.categories"
+                        + " WHERE done = :itemsDone")
                 .setParameter("itemsDone", false)
                 .list());
     }
@@ -62,7 +67,7 @@ public class HibernateStore implements Store, AutoCloseable {
     public boolean updateDone(int id, boolean done) {
         int i = this.tx(session ->
                 session.createQuery(
-                        "UPDATE ru.job4j.model.Item SET done = :itemsDone WHERE id = :itemsId")
+                        "UPDATE ru.job4j.models.Item SET done = :itemsDone WHERE id = :itemsId")
         .setParameter("itemsDone", done)
         .setParameter("itemsId", id)
         .executeUpdate());
@@ -89,7 +94,7 @@ public class HibernateStore implements Store, AutoCloseable {
     @Override
     public Optional<User> findUserByEmail(String email) {
         return this.tx(session ->
-                session.createQuery("from ru.job4j.model.User WHERE email_user = :emailUser")
+                session.createQuery("from ru.job4j.models.User WHERE email_user = :emailUser")
                         .setParameter("emailUser", email)
                         .list()
                         .stream()
@@ -99,6 +104,27 @@ public class HibernateStore implements Store, AutoCloseable {
     @Override
     public void addUser(User user) {
         this.tx(session -> session.save(user));
+    }
+
+    @Override
+    public List<Category> findAllCategories() {
+        return this.tx(session ->
+                session.createQuery("from ru.job4j.models.Category", Category.class).list());
+    }
+
+    @Override
+    public void addCategory(Category category) {
+        this.tx(session -> session.save(category));
+    }
+
+    @Override
+    public Optional<Category> findCategoryById(int id) {
+        return this.tx(session ->
+                session.createQuery("from ru.job4j.models.Category WHERE category_id = :idCategory")
+                        .setParameter("idCategory", id)
+                        .list()
+                        .stream()
+                        .findFirst());
     }
 
     private <T> T tx(final Function<Session, T> command) {

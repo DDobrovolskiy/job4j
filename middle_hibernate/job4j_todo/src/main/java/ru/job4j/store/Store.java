@@ -1,9 +1,11 @@
 package ru.job4j.store;
 
+import ru.job4j.models.Category;
 import ru.job4j.models.Item;
 import ru.job4j.models.User;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface Store {
@@ -22,4 +24,10 @@ public interface Store {
     Optional<User> findUserByEmail(String email);
 
     void addUser(User user);
+
+    List<Category> findAllCategories();
+
+    void addCategory(Category category);
+
+    Optional<Category> findCategoryById(int id);
 }

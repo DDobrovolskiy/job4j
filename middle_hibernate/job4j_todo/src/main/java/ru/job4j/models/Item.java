@@ -2,6 +2,8 @@ package ru.job4j.models;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.LinkedList;
+import java.util.List;
 
 @Entity
 @Table(name = "items")
@@ -18,8 +20,14 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "id_user", nullable = false)
     private User user;
+    @ManyToMany
+    private List<Category> categories = new LinkedList<>();
 
     public Item() {
+    }
+
+    public void addCategory(Category category) {
+        categories.add(category);
     }
 
     public int getId() {
@@ -60,5 +68,25 @@ public class Item {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<Category> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(List<Category> categories) {
+        this.categories = categories;
+    }
+
+    @Override
+    public String toString() {
+        return "Item{"
+                + "id=" + id
+                + ", description='" + description + '\''
+                + ", createdTime=" + createdTime
+                + ", done=" + done
+                + ", user=" + user
+                + ", categories=" + categories
+                + '}';
     }
 }

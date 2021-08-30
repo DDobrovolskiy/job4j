@@ -1,13 +1,53 @@
 load(false)
 logging()
+loadCategory()
+
+function loadCategory() {
+    $.ajax({
+        type: 'GET',
+        url: 'http://localhost:8080/todo/category',
+        dataType: 'json'
+    }).done(function (data) {
+        console.log(data)
+        let html = '<select class="form-control" name="categ" id="categ" multiple>'
+        for(let ctg of data)
+        {
+            console.log(ctg)
+            html += '<option value="' + ctg.id + '">'
+                html += ctg.name
+            html += '</option>'   
+        }
+        html += '</select>'
+        $('#categ').replaceWith(html)
+        console.log('#categ')
+    }).fail(function (err) {
+        console.log(err)
+    })
+}
 
 function validate() {
     if($('#description').val() == '') {
         alert($('#description').attr('title'));
         return false
     }
-    return true 
+    if(validateSelects() == false)
+    {
+        alert('Выберите хотя бы одну категорию!')
+        return false
+    }
+    return true
 }
+
+function validateSelects()
+{
+    var m = false;
+    $.each($('select'),function()
+    {
+         if( $(this).val() != ''){  m=true; }
+    });
+    return(m);
+}
+
 
 function getCheck(check) {
     if(check == true) {
@@ -40,6 +80,11 @@ function load(all) {
                     html += '</td>' 
                     html += '<td>'
                     html += item.createdTime
+                    html += '</td>'
+                    html += '<td>'
+                    for(let c of item.categories) {
+                        html += '<p>' + c.name + '</p>'
+                    }
                     html += '</td>'
                     html += '<td>'
                     html += item.description
@@ -108,7 +153,7 @@ function logging() {
         dataType: 'json'
     }).done(function (data) {
         console.log(data)
-        let html = '<h4 id="logging">' + data.name + '</h4>'
+        let html = '<b  id="logging">' + data.name + '</b>'
         $('#logging').replaceWith(html)
     }
     ).fail(function (err) {
