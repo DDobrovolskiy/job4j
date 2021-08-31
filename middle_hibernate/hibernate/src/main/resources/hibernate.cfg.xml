@@ -16,5 +16,10 @@
         <mapping class="ru.job4j.models.Car" />
         <mapping class="ru.job4j.models.Author" />
         <mapping class="ru.job4j.models.Book" />
+
+        <mapping class="ru.job4j.models.cars.Car" />
+        <mapping class="ru.job4j.models.cars.Driver" />
+        <mapping class="ru.job4j.models.cars.Engine" />
+        <mapping class="ru.job4j.models.cars.Owner" />
     </session-factory>
 </hibernate-configuration>
