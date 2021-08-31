@@ -12,6 +12,7 @@ before_install:
   - psql -c 'CREATE DATABASE tracker' -U postgres
   - psql -c 'CREATE DATABASE cinema' -U postgres
   - psql -c 'CREATE DATABASE todo' -U postgres
+  - psql -c 'CREATE DATABASE cars' -U postgres
 
 env:
   global:
