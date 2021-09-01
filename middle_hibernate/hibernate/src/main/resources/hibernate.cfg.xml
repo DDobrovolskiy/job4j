@@ -23,5 +23,7 @@
         <mapping class="ru.job4j.models.cars.Owner" />
 
         <mapping class="ru.job4j.models.Candidate" />
+        <mapping class="ru.job4j.models.HH" />
+        <mapping class="ru.job4j.models.Vacancy" />
     </session-factory>
 </hibernate-configuration>

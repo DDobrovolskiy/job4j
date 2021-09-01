@@ -1,9 +1,6 @@
 package ru.job4j.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
 @Table(name = "candidates")
@@ -14,6 +11,8 @@ public class Candidate {
     private String name;
     private int experience;
     private int salary;
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private HH hh;
 
     public Candidate() {
     }
@@ -56,6 +55,14 @@ public class Candidate {
         this.salary = salary;
     }
 
+    public HH getHh() {
+        return hh;
+    }
+
+    public void setHh(HH hh) {
+        this.hh = hh;
+    }
+
     @Override
     public String toString() {
         return "Candidate{"
@@ -63,6 +70,7 @@ public class Candidate {
                 + ", name='" + name + '\''
                 + ", experience=" + experience
                 + ", salary=" + salary
+                + ", hh=" + hh
                 + '}';
     }
 }
