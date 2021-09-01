@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class DataAccessObject implements Store, AutoCloseable {
+public class DataAccessObject implements Store, FilterStore, AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(DataAccessObject.class.getName());
     private final SessionFactory sf = new Configuration().configure().buildSessionFactory();
 
