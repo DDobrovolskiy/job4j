@@ -42,7 +42,7 @@ public class HbmCandidates {
             var result3 = (Candidate) session
                     .createQuery("FROM Candidate c WHERE c.name = :nameC")
                     .setParameter("nameC", dmitriy.getName())
-                    .uniqueResult();
+                    .list();
             System.out.println(result3);
 
             //4 обновления записи кандидата
