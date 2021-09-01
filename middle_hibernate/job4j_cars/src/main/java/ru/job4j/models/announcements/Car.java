@@ -35,6 +35,9 @@ public class Car {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    public Car() {
+    }
+
     public int getId() {
         return id;
     }
