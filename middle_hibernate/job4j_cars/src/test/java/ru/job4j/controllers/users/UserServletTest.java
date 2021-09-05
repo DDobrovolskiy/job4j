@@ -50,7 +50,7 @@ public class UserServletTest {
 
         System.out.println(result);
 
-        Assert.assertThat(result, is(GSON.toJson(user) + "\r\n"));
+        Assert.assertThat(result, is(GSON.toJson(user) + System.lineSeparator()));
     }
 
     @Test

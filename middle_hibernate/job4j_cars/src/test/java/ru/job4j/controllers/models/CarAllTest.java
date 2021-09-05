@@ -92,6 +92,7 @@ public class CarAllTest {
 
         System.out.println(result);
 
-        Assert.assertThat(result, is(GSON.toJson(store.getAllActiveCars()) + "\r\n"));
+        Assert.assertThat(result,
+                is(GSON.toJson(store.getAllActiveCars()) + System.lineSeparator()));
     }
 }
