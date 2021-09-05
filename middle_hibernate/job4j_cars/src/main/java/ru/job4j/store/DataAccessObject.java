@@ -3,6 +3,9 @@ package ru.job4j.store;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.MetadataSources;
+import org.hibernate.boot.registry.StandardServiceRegistry;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,7 +23,10 @@ import java.util.function.Function;
 
 public class DataAccessObject implements Store, AutoCloseable {
     private static final Logger LOG = LoggerFactory.getLogger(DataAccessObject.class.getName());
-    private final SessionFactory sf = new Configuration().configure().buildSessionFactory();
+    private final StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
+            .configure().build();
+    private final SessionFactory sf = new MetadataSources(registry)
+            .buildMetadata().buildSessionFactory();
 
     @Override
     public List<Car> getCarsToday() {
@@ -40,7 +46,12 @@ public class DataAccessObject implements Store, AutoCloseable {
     @Override
     public List<Car> getCarsWithPhoto() {
         return this.tx(session -> session
-                .createQuery("FROM Car c WHERE c.photo IS NOT NULL")
+                .createQuery(
+                        "FROM Car c "
+                        + "JOIN FETCH c.mark "
+                        + "JOIN FETCH c.body "
+                        + "JOIN FETCH c.user "
+                        + "WHERE c.photo IS NOT NULL")
                 .list());
     }
 
@@ -55,6 +66,51 @@ public class DataAccessObject implements Store, AutoCloseable {
                         + "WHERE c.mark.id = :markId")
                 .setParameter("markId", id)
                 .list());
+    }
+
+    @Override
+    public List<Car> getAllActiveCars() {
+        return this.tx(session -> session
+                .createQuery(
+                        "FROM Car c "
+                                + "JOIN FETCH c.mark "
+                                + "JOIN FETCH c.body "
+                                + "JOIN FETCH c.user "
+                                + "WHERE c.status = :carStatus")
+                .setParameter("carStatus", true)
+                .list());
+    }
+
+    @Override
+    public void clearCarsTable() {
+        this.tx(session -> session.createQuery("DELETE FROM Car").executeUpdate());
+    }
+
+    @Override
+    public void clearBodyTable() {
+        this.tx(session -> {
+            var bodies = getBodies();
+            bodies.forEach(session::delete);
+            return null;
+        });
+    }
+
+    @Override
+    public void clearMarkTable() {
+        this.tx(session -> {
+            var marks = getMarks();
+            marks.forEach(session::delete);
+            return null;
+        });
+    }
+
+    @Override
+    public void clearUserTable() {
+        this.tx(session -> {
+            var users = getAllUser();
+            users.forEach(session::delete);
+            return null;
+        });
     }
 
     private static final class Lazy {
@@ -89,20 +145,18 @@ public class DataAccessObject implements Store, AutoCloseable {
 
     @Override
     public Optional<Body> getBodyOnId(int id) {
-        Body body = (Body) this.tx(session ->
+        return Optional.ofNullable((Body) this.tx(session ->
                 session.createQuery("FROM Body b WHERE b.id = :idB")
                         .setParameter("idB", id)
-                        .uniqueResult());
-        return Optional.of(body);
+                        .uniqueResult()));
     }
 
     @Override
     public Optional<Mark> getMarkOnId(int id) {
-        Mark mark = (Mark) this.tx(session ->
+        return Optional.ofNullable((Mark) this.tx(session ->
                 session.createQuery("FROM Mark m WHERE m.id = :idM")
                     .setParameter("idM", id)
-                    .uniqueResult());
-        return Optional.of(mark);
+                    .uniqueResult()));
     }
 
     @Override
@@ -111,8 +165,57 @@ public class DataAccessObject implements Store, AutoCloseable {
     }
 
     @Override
+    public List<User> getAllUser() {
+        return this.tx(session ->
+                session.createQuery("from User", User.class).list());
+    }
+
+    @Override
+    public Optional<User> getUserByEmail(String email) {
+        return Optional.ofNullable((User) this.tx(session ->
+                session.createQuery("FROM User u WHERE u.email = :emailU")
+                        .setParameter("emailU", email)
+                        .uniqueResult()));
+    }
+
+    @Override
     public void addCar(Car car) {
         this.tx((session -> session.save(car)));
+    }
+
+    @Override
+    public List<Car> getCarsByIdUser(int id) {
+        return this.tx(session -> session
+                .createQuery(
+                        "FROM Car c "
+                                + "JOIN FETCH c.mark m "
+                                + "JOIN FETCH c.body b "
+                                + "JOIN FETCH c.user u "
+                                + "WHERE u.id = :idUser")
+                .setParameter("idUser", id)
+                .list());
+    }
+
+    @Override
+    public void insertPhotoInCar(int idCar, String namePhoto) {
+        this.tx(session -> session.createQuery(
+                "UPDATE Car c "
+                        + "SET c.photo = :namePhoto "
+                        + "WHERE c.id = :idCar")
+        .setParameter("namePhoto", namePhoto)
+        .setParameter("idCar", idCar)
+        .executeUpdate());
+    }
+
+    @Override
+    public void changeStatusCar(int idCar, boolean statusCar) {
+        this.tx(session -> session.createQuery(
+                "UPDATE Car c "
+                        + "SET c.status = :statusCar "
+                        + "WHERE c.id = :idCar")
+                .setParameter("statusCar", statusCar)
+                .setParameter("idCar", idCar)
+                .executeUpdate());
     }
 
     private <T> T tx(final Function<Session, T> command) {
@@ -132,8 +235,6 @@ public class DataAccessObject implements Store, AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        if (sf != null) {
-            sf.close();
-        }
+        StandardServiceRegistryBuilder.destroy(registry);
     }
 }

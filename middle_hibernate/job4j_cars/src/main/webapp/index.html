@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cars treader</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="resources/core.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="resources/core.js"></script>
+    <script src="resources/user.js"></script>
+</head>
+<body>
+    <div class="container pt-3">
+        <div class="row">
+            <div class="card-body">
+                <form action="/car/user" method="POST" class="Mytitle">
+                    <a href="/car/profile">Перейти в личный кабинет (Добавить машину)</a> ||
+                    <b id="logging">Имя </b> 
+                    <button type="submit" class="btn btn-secondary" >Выйти</button>
+                </form>
+            </div>
+            <div class="card" style="width: 100%">
+                <div class="card-header">
+                    Машины в продаже
+                </div>
+        <div class="row">
+            <div class="card" style="width: 100%">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">Фото</th>
+                            <th scope="col">Дата объяления</th>
+                            <th scope="col">Марка</th>
+                            <th scope="col">Тип кузова</th>
+                            <th scope="col">Описание</th>
+                            <th scope="col">Стоимость</th>
+                            <th scope="col">Контакты</th>
+                        </tr>
+                        </thead>
+                        <tbody id='dataTable'>
+                            <tr><td>Загрузка данных...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+    </div>
+</body>
+</html>

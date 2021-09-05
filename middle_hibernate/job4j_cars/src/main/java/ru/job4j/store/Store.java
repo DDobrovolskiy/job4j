@@ -23,6 +23,10 @@ public interface Store {
 
     void addUser(User user);
 
+    List<User> getAllUser();
+
+    Optional<User> getUserByEmail(String email);
+
     void addCar(Car car);
 
     List<Car> getCarsToday();
@@ -30,4 +34,20 @@ public interface Store {
     List<Car> getCarsWithPhoto();
 
     List<Car> getCarsOfMarkOnId(int id);
+
+    List<Car> getAllActiveCars();
+
+    void clearCarsTable();
+
+    void clearBodyTable();
+
+    void clearMarkTable();
+
+    void clearUserTable();
+
+    List<Car> getCarsByIdUser(int id);
+
+    void insertPhotoInCar(int idCar, String namePhoto);
+
+    void changeStatusCar(int idCar, boolean statusCar);
 }

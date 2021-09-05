@@ -7,7 +7,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.*;
 
 public class HbmTrackerTest {
-    private final Store store = new  HbmTracker();
+    private final Store store = new HbmTracker();
 
     @Test
     public void replace() {
